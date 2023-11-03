@@ -1,0 +1,98 @@
+<div class="container-fluid">
+    {% if app.user %}
+    <div class="nav__desktop">
+        <nav>
+            <ul>
+                <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Match Montage +</strong></li></a>
+            </ul>
+            <ul>
+                <li><a href="{{path('app_home')}}">Afficher la liste</a></li>
+                <li><a href="{{path('app_contact')}}" role="button">Contact</a></li> 
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{path('admin')}}" target="_blank">Administrateur</a></li>
+                        <hr>
+                    {% endif %}
+                    <li><a href="{{path('myAccount')}}">Mon compte</a></li>
+                    <li><a href="{{path('abonnement')}}">Abonnements</a></li>
+                    <hr>
+                    <li><a href="{{path('app_logout')}}">Deconnexion</a></li>
+                </div>           
+                <span class="user-icon" onclick="openNav()">
+                   Mon Profil
+                </span>
+                <li><a id="theme_switcher"></a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="nav__mobile">
+        <nav>
+            <ul>
+                <li><a id="theme_switcher_mobile"></a></li>
+            </ul>
+            <ul>
+                <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Match Montage +</strong></li></a>
+            </ul>
+            <ul>
+                <div id="mySidenavMobile" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNavMobile()">&times;</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{path('admin')}}" target="_blank">Administrateur</a></li>
+                        <hr>
+                    {% endif %}
+                    <hr>
+                    <li><a href="{{path('app_home')}}">Afficher la liste</a></li>
+                    <hr>
+                    <li><a href="{{path('myAccount')}}">Mon compte</a></li>
+                    <li><a href="{{path('abonnement')}}">Abonnements</a></li>
+                    <li><a href="{{path('app_contact')}}">Contact</a></li> 
+                    <hr>
+                    <li><a href="{{path('app_logout')}}">Deconnexion</a></li>
+                </div>           
+                <span class="user-icon">
+                    <i class="fa fa-bars" onclick="openNavMobile()"></i>
+                </span>
+                
+            </ul>
+        </nav>
+    </div>
+    {% else %}
+    <div class="nav__desktop">
+        <nav>
+            <ul>
+                <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Match Montage +</strong></li></a>
+            </ul>
+            <ul>
+                <li><a href="{{path('app_login')}}">Connexion</a></li>
+                <li><a href="{{path('app_register')}}">Inscription</a></li>
+                <li><a href="{{path('app_contact')}}" role="button">Contact</a></li>
+                <li><a id="theme_switcher"></a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="nav__mobile">
+        <nav>
+            <ul>
+                <li><a id="theme_switcher_mobile"></a></li>
+            </ul>
+            <ul>
+                <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Match Montage +</strong></li></a>
+            </ul>
+            <ul>
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Accueil</strong></li></a>
+                    <li><a href="{{path('app_login')}}">Connexion</a></li>
+                    <li><a href="{{path('app_register')}}">Inscription</a></li>
+                    <hr>
+                    <li><a href="{{path('app_contact')}}">Contact</a></li>
+                </div>           
+                <span class="user-icon" onclick="openNav()">
+                    <i class="fa fa-bars"></i>
+                </span>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>

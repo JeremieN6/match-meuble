@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voyage + | ChatBot {% endblock %}
+
+{% block body %}
+<h1>🚀 Liste de tes voyages de rêve {{user.prenom}} 🚀</h1>
+{% if mesVoyages is empty %}
+<p>Vous n'avez pas encore soumis de formulaires de voyage.</p>
+{% else %}
+
+    {% for formNumber, responses in responsesByForm %}
+    <article id="article">
+        <h2>Numéro de formulaire : {{ formNumber }}</h2>
+        <p>
+            <ul>
+                {% for response in responses %}
+                    <li>
+                        <span>Question : {{ response.question.questionText }}</span>
+                        <p>Réponse : {{ response.laReponse }}</p>
+                    </li>
+                {% endfor %}
+
+                {% for response in responses %}
+                    {% if loop.first %}
+                        <hgroup>
+                            <h3>Planning de l'IA</h3>
+                            <p>{{ response.reponseIA|raw|nl2br }}</p>
+                        </hgroup>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </p>
+        {% for response in responses %}
+            {% if loop.first %}
+        <footer>
+            <small><em>Formulaire soumis le {{ response.createdAt.format('d m Y à H:i') }}</em></small>
+        </footer>
+            {% endif %}
+        {% endfor %}
+      </article>
+
+    {% endfor %}
+
+{% endif %}
+{% endblock %}

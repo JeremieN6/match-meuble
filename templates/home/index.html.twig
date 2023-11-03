@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Match Meuble+ | Accueil{% endblock %}
+
+{% block body %}
+  <div class="grid">
+    <hgroup>
+      <h1>La solution n°1 pour monter ou faire monter des meubles !</h1> <br>
+      <p>
+        Découvrez Match Montage+, la plateforme qui simplifie la vie de ceux 
+        qui ont besoin d'aide pour monter des meubles et de ceux qui aiment le faire. <br>
+        Trouvez des monteurs compétents ou proposez vos services en quelques clics.
+      </p>
+        <div class="grid">
+          <button><a href="{{path('app_home')}}">Démarrer</a></buttton>
+          <button class="outline"><a href="{{path('about')}}">En savoir plus</a></buttton>
+        </div>
+    </hgroup>
+    <div>
+      <img src="{{asset('/images/banner-2.png')}}" alt="Illustration 3D Montage">
+    </div>
+  </div>
+  <hgroup>
+    <h2>Notre promesse</h2>
+    <p>
+      Que vous soyez en train de déménager, de rénover ou simplement de chercher de l'aide pour monter un meuble, 
+      Match Montage+ est là pour vous connecter avec des personnes prêtes à rendre votre tâche plus facile. <br>
+      Inscrivez-vous dès aujourd'hui pour découvrir comment Match Montage+ facilite la mise en relation, la communication
+      et la planification, tout en construisant une communauté de passionnés du montage de meubles. 
+      Votre solution pour des montages sans souci est à portée de main.
+    </p>
+  </hgroup>
+
+
+  <hgroup>
+  <h2>Nos client(e)s en parlent pour nous !</h2>
+  <div class="grid">
+    <article id="article">
+      <h3><em>«Une super application conviviale et pratique»</em></h3>
+      <p>
+        Grâce à Match Montage+, j'ai trouvé un monteur de meubles compétent en un temps record. 
+        Cela a rendu mon déménagement bien moins stressant. 
+        Je recommande cette application à quiconque a besoin d'aide pour monter des meubles ! <br>
+        D'ailleurs j'ai une amis qui a un évenement et doit louer du mobilié, elle sera ravi de savoir que ce service existe. <br>
+        Merci à vous !
+      </p>
+      <footer><small>Par Maxime L.</small></footer>
+    </article>
+
+    <article id="article">
+      <h3><em>«Une nouvelle façon de faire un peu d'argent.»</em></h3>
+      <p>
+        J'ai récemment proposé mes services sur Match Montage+ et j'ai été surpris de voir à quel point la communauté est accueillante. <br>
+        J'ai pu gagner de l'argent en faisant ce que j'aime, et j'ai rencontré des personnes formidables en cours de route. <br>
+        C'est la plateforme idéale pour créer des liens et partager des compétences.<br>
+        Une expérience incroyable !
+      </p>
+      <footer><small>Par Maxime L.</small></footer>
+    </article>
+  </div>
+  </hgroup>
+
+  <hgroup>
+    <h3>S'abonner</h3>
+    <small><p>Abonnez vous à la newsletter pour être au courant des prochaines promotions, mises à jours et jeux concours. 🙂</p></small>
+  </hgroup>
+
+
+
+      {{ form_start(formNewsletter) }}
+      <div class="grid">
+      {{ form_row(formNewsletter.email) }}
+      {{form_row(formNewsletter.submit)}}
+    
+    {{ form_end(formNewsletter) }}
+  </div>
+
+{% endblock %}
