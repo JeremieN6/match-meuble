@@ -87,10 +87,30 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface, Serial
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripeId = null;
 
+    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: DemandeDeTravail::class)]
+    private Collection $demandeDeTravails;
+
+    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: OffreDeTravail::class)]
+    private Collection $offreDeTravails;
+
+    #[ORM\OneToMany(mappedBy: 'userIdAuteur', targetEntity: Evaluation::class)]
+    private Collection $evaluations;
+
+    #[ORM\OneToMany(mappedBy: 'expediteurId', targetEntity: Message::class)]
+    private Collection $messages;
+
+    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Notification::class)]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
         $this->subscriptions = new ArrayCollection();
+        $this->demandeDeTravails = new ArrayCollection();
+        $this->offreDeTravails = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -410,5 +430,155 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface, Serial
             // see section on salt below
             // $this->salt
         ) = unserialize($serialized);
+    }
+
+    /**
+     * @return Collection<int, DemandeDeTravail>
+     */
+    public function getDemandeDeTravails(): Collection
+    {
+        return $this->demandeDeTravails;
+    }
+
+    public function addDemandeDeTravail(DemandeDeTravail $demandeDeTravail): static
+    {
+        if (!$this->demandeDeTravails->contains($demandeDeTravail)) {
+            $this->demandeDeTravails->add($demandeDeTravail);
+            $demandeDeTravail->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandeDeTravail(DemandeDeTravail $demandeDeTravail): static
+    {
+        if ($this->demandeDeTravails->removeElement($demandeDeTravail)) {
+            // set the owning side to null (unless already changed)
+            if ($demandeDeTravail->getUserId() === $this) {
+                $demandeDeTravail->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OffreDeTravail>
+     */
+    public function getOffreDeTravails(): Collection
+    {
+        return $this->offreDeTravails;
+    }
+
+    public function addOffreDeTravail(OffreDeTravail $offreDeTravail): static
+    {
+        if (!$this->offreDeTravails->contains($offreDeTravail)) {
+            $this->offreDeTravails->add($offreDeTravail);
+            $offreDeTravail->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffreDeTravail(OffreDeTravail $offreDeTravail): static
+    {
+        if ($this->offreDeTravails->removeElement($offreDeTravail)) {
+            // set the owning side to null (unless already changed)
+            if ($offreDeTravail->getUserId() === $this) {
+                $offreDeTravail->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): static
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->setUserIdAuteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): static
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getUserIdAuteur() === $this) {
+                $evaluation->setUserIdAuteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setExpediteurId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getExpediteurId() === $this) {
+                $message->setExpediteurId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUserId() === $this) {
+                $notification->setUserId(null);
+            }
+        }
+
+        return $this;
     }
 }
