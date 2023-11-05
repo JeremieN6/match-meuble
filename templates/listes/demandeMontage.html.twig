@@ -1,31 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Voyage + | Plans {% endblock %}
+{% block title %}Match Montage+ | Formulaire demande pour montage{% endblock %}
 
 {% block body %}
 
-<div class="grid">
-    {% for item in Plan %}
-    <div>
-        <article id="article">
-            <h3>
-                {{item.nom}}
-            </h3>
-            <p>
-                {{item.description|raw}}
-            </p>
-    
-            <a href="{{item.paymentLink}}" target="_blank">
-                <button>S'abonner</button>
-            </a>
-        
-            <footer>
-                <small><em>Par Match Meuble+</em></small>
-            </footer>
-        
-          </article>
-    </div>
-    {% endfor %}
-</div>
+{{ form_start(demandeMontageForm) }}
+{{ form_end(demandeMontageForm) }}
+<button class="outline"><a href="{{path('app_home')}}">Retour</a></buttton>
 
 {% endblock %}
