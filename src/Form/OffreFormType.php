@@ -36,9 +36,11 @@ class OffreFormType extends AbstractType
         ])
         ->add('dateDebutMontage', DateType::class, [
             'label' => 'Date de début',
+            'attr' => ['class' => 'js-datepicker'],
         ])
         ->add('dateFinMontage', DateType::class, [
             'label' => 'Date de fin',
+            'attr' => ['class' => 'js-datepicker'],
         ])
         ->add('submit', SubmitType::class, [
             'label' => 'Valider',

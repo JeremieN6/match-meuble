@@ -2,8 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\DemandeDeTravail;
+use App\Entity\OffreDeTravail;
 use App\Form\DemandeFormType;
 use App\Form\OffreFormType;
+use App\Repository\DemandeDeTravailRepository;
+use App\Repository\OffreDeTravailRepository;
+use App\Repository\StatusOffreRepository;
+use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +23,7 @@ class ListeMontageController extends AbstractController
     public function offreMontage(
         Request $request,
         EntityManagerInterface $entityManager,
+        StatusOffreRepository $statusOffreRepository,
         \MercurySeries\FlashyBundle\FlashyNotifier $flashy
     ): Response {
 
@@ -31,15 +38,37 @@ class ListeMontageController extends AbstractController
         //On vérifie si le formulaire est soumis ET valide
         if($offreMontageForm->isSubmitted() && $offreMontageForm->isValid()){
 
+            //Récupérer les réponses du formulaire
+            $reponsesData = $offreMontageForm->getData();
+
+            $description = $reponsesData['description'];
+            $localisation = $reponsesData['localisation'];
+            $remuneration = $reponsesData['remuneration'];
+            $dateDebutMontage = $reponsesData['dateDebutMontage'];
+            $dateFinMontage = $reponsesData['dateFinMontage'];
+
+            //Paramétrer le status de l'offre à "Libre" par défaut
+            $statusLibre = $statusOffreRepository->find(1);
+
+            $offerMontageEntity = new OffreDeTravail();
+            $offerMontageEntity->setUserId($connectedUser);
+            $offerMontageEntity->setStatus($statusLibre);
+            $offerMontageEntity->setDescription($description);
+            $offerMontageEntity->setLocalisation($localisation);
+            $offerMontageEntity->setRemuneration($remuneration);
+            $offerMontageEntity->setDateDebutMontage($dateDebutMontage);
+            $offerMontageEntity->setDateFinMontage($dateFinMontage);
+
              //envoie a l'entité
-             $entityManager->persist($connectedUser);
+             $entityManager->persist($offerMontageEntity);
              $entityManager->flush();
  
              $flashy->success('Ton offre de montage a été validé avec succès ! 🚀');
  
              //On redirige
-             return $this->redirectToRoute('app_home');
+             return $this->redirectToRoute('app_liste_montage');
         }
+        
 
         return $this->render('listes/offreMontage.html.twig', [
             'controller_name' => 'ListeMontageController',
@@ -66,14 +95,30 @@ class ListeMontageController extends AbstractController
         //On vérifie si le formulaire est soumis ET valide
         if($demandeMontageForm->isSubmitted() && $demandeMontageForm->isValid()){
 
-             //envoie a l'entité
-             $entityManager->persist($connectedUser);
-             $entityManager->flush();
+            //Récupérer les réponses du formulaire
+            $reponsesData = $demandeMontageForm->getData();
+
+            $description = $reponsesData['description'];
+            $disponibilite = $reponsesData['disponibilite'];
+            $zoneAction = $reponsesData['zoneAction'];
+            $salaire = $reponsesData['salaire'];
+            
+            $demandeMontageEntity = new DemandeDeTravail();
+            $demandeMontageEntity->setUserId($connectedUser);
+            $demandeMontageEntity->setDescription($description);
+            $demandeMontageEntity->setDisponibilite($disponibilite);
+            $demandeMontageEntity->setZoneAction($zoneAction);
+            $demandeMontageEntity->setSalaire($salaire);
+            $demandeMontageEntity->setCreatedAt(new DateTimeImmutable());
+
+            //envoie a l'entité
+            $entityManager->persist($demandeMontageEntity);
+            $entityManager->flush();
  
-             $flashy->success('Ta demande de montage a été validé avec succès ! 🚀');
- 
-             //On redirige
-             return $this->redirectToRoute('app_home');
+            $flashy->success('Ta demande de montage a été validé avec succès ! 🚀');
+
+            //On redirige
+            return $this->redirectToRoute('app_liste_montage');
         }
 
 
@@ -84,18 +129,27 @@ class ListeMontageController extends AbstractController
         ]);
     }
 
-    #[Route('/liste-montage-meuble', name: 'app_offre_montage')]
+    #[Route('/liste-montage-meuble', name: 'app_liste_montage')]
     public function listeMontageMeuble(
         Request $request,
         EntityManagerInterface $entityManager,
+        OffreDeTravailRepository $offreDeTravailRepository,
+        DemandeDeTravailRepository $demandeDeTravailRepository,
         \MercurySeries\FlashyBundle\FlashyNotifier $flashy
     ): Response {
 
         $connectedUser = $this->getUser();
 
+        //Récupérer toutes les offres de montage dans l'entité
+        $listeOffreTravail = $offreDeTravailRepository->findAll();
+        $listeDemandeTravail = $demandeDeTravailRepository->findAll();
+
+
         return $this->render('listes/listeMontageMeuble.html.twig', [
             'controller_name' => 'ListeMontageController',
             'user' => $connectedUser,
+            'listeOffreTravail' => $listeOffreTravail,
+            'listeDemandeTravail' => $listeDemandeTravail
         ]);
     }
 }

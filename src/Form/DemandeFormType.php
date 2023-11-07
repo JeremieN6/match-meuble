@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,6 +24,15 @@ class DemandeFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Quel est votre périmètre d\'action ?'
                 ],
+            ])
+            ->add('disponibilite', ChoiceType::class, [
+                'choices' => [
+                    'Immédiatement' => 'immediatement',
+                    'Disponible dans 2 à 3 jours' => '2_3_jours',
+                    'Disponible dans 1 semaine à 2 semaines' => '1_2_semaine',
+                    'Disponible dans 1 mois et plus' => '1_mois_et_plus',
+                ],
+                'label' => 'Disponobilité',
             ])
             ->add('salaire', IntegerType::class, [
                 'label' => 'Tarif à l\'heure',

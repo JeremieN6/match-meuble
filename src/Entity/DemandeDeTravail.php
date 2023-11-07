@@ -20,6 +20,9 @@ class DemandeDeTravail
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $disponibilite = null;
+
     #[ORM\Column(nullable: true)]
     private ?int $salaire = null;
 
@@ -57,6 +60,18 @@ class DemandeDeTravail
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getDisponibilite(): ?string
+    {
+        return $this->disponibilite;
+    }
+
+    public function setDisponibilite(?string $disponibilite): static
+    {
+        $this->disponibilite = $disponibilite;
 
         return $this;
     }
