@@ -17,6 +17,9 @@ class OffreDeTravail
     #[ORM\ManyToOne(inversedBy: 'offreDeTravails')]
     private ?Users $userId = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $titre = null;
+    
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
@@ -57,6 +60,18 @@ class OffreDeTravail
     public function setUserId(?Users $userId): static
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(?string $titre): static
+    {
+        $this->titre = $titre;
 
         return $this;
     }

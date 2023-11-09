@@ -98,4 +98,30 @@
     border-radius: 50%;
     object-fit: cover;
 }
+#listeOffres{
+    display: none;
+}
+@media (min-width: 768px){
+    .container_articles{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+      grid-auto-rows: minmax(100px, auto);
+    }
+    .container_image {
+        width: 100%;
+    }
+    img.content_img {
+        width: 100%;
+    }
+    /* .container_dispo_remuneration{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    } */
+    /* .content_remuneration,
+    .content_dispo{
+      font-size: 15px;
+    } */
+  }
 /* MY ACCOUNT */

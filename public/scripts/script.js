@@ -29,3 +29,24 @@ function closeNav() {
 function closeNavMobile() {
   document.getElementById("mySidenavMobile").style.width = "0";
 }
+
+/* LISTE DES OFFRES ET DEMANDES */ 
+document.addEventListener('DOMContentLoaded', function () {
+    // Sélectionnez les boutons et les listes
+    var btnOffres = document.getElementById('btnOffres');
+    var btnDemandes = document.getElementById('btnDemandes');
+    var listeOffres = document.getElementById('listeOffres');
+    var listeDemandes = document.getElementById('listeDemandes');
+
+    // Fonction pour afficher la liste des offres et masquer la liste des demandes
+    btnOffres.addEventListener('click', function () {
+        listeOffres.style.display = 'block';
+        listeDemandes.style.display = 'none';
+    });
+
+    // Fonction pour afficher la liste des demandes et masquer la liste des offres
+    btnDemandes.addEventListener('click', function () {
+        listeOffres.style.display = 'none';
+        listeDemandes.style.display = 'block';
+    });
+});

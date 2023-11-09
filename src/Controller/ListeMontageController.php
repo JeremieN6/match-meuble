@@ -135,6 +135,7 @@ class ListeMontageController extends AbstractController
         EntityManagerInterface $entityManager,
         OffreDeTravailRepository $offreDeTravailRepository,
         DemandeDeTravailRepository $demandeDeTravailRepository,
+        StatusOffreRepository $statusOffreRepository,
         \MercurySeries\FlashyBundle\FlashyNotifier $flashy
     ): Response {
 

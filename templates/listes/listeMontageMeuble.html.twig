@@ -8,4 +8,74 @@
     <h1>Offres &amp; demandes</h1>
     <p>Voici la liste des offres et demandes de montage de meuble</p>
 </hgroup>
+
+<div class="grid">
+  <button id="btnOffres">Liste des offres</button>
+  <button id="btnDemandes" class="outline">Liste des demandes</button>
+</div>
+
+<div class="container_articles">
+  {% for items in listeDemandeTravail %}
+    <article id="article" class="myCard">
+      <div class="container_image">
+        <img src="https://image.cdn2.seaart.ai/2023-08-02/51776092729413/c5f24c91b92feeec1d046734e3f1ab996b060775_high.webp" alt="Bureau Gamer" class="content_img">
+      </div>
+      <div class="container_detail_profil">
+        <div class="container_dispo_remuneration">
+          <div class="container_dispo">
+            {% if items.disponibilite != null %}
+            <p class="content_dispo">
+              Disponible : {{items.disponibilite}}
+            </p>
+            {% else %}
+            <p class="content_dispo">
+              Disponobilité non renseigné
+            </p>
+            {% endif %}
+          </div>
+          <div class="container_remuneration">
+            <p class="content_remuneration">Rémunération : {{items.salaire}}€/heure</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  {% endfor %}
+
+  {% for lesOffres in listeOffreTravail %}
+    <article id="article" class="myCard">
+      <div class="container_image">
+        <img src="https://image.cdn2.seaart.ai/2023-08-02/51776092729413/c5f24c91b92feeec1d046734e3f1ab996b060775_high.webp" alt="Bureau Gamer" class="content_img">
+      </div>
+      <div class="containerTitre">
+        <p>{{ lesOffres.titre }}</p>
+      </div>
+      <div class="container_detail_profil">
+        <div class="container_dispo_remuneration">
+          {# <div class="container_dispo">
+            {% if lesOffres.status != null %}
+            <p class="content_dispo">
+              Disponible : {{ lesOffres.status }}
+            </p>
+            {% else %}
+            <p class="content_dispo">
+              Disponobilité non renseigné
+            </p>
+            {% endif %}
+          </div> #}
+          <div class="container_remuneration">
+            <p class="content_remuneration">Rémunération : {{ lesOffres.remuneration }}€.</p>
+          </div>
+        </div>
+        <div class="container_localisation">
+          <p>{{ lesOffres.localisation }}</p>
+        </div>
+        <div class="container_date">
+          <p> Prévu du : {{ lesOffres.dateDebutMontage.format('d/m/Y') }} <br>
+            au : {{ lesOffres.dateFinMontage.format('d/m/Y') }}
+        </div>
+      </div>
+    </article>
+  {% endfor %}
+
+  </div>
 {% endblock %}

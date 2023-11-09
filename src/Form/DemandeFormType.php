@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,8 +17,17 @@ class DemandeFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('description', TextType::class, [
+        ->add('titre', TextType::class, [
+            'label' => 'Titre',
+            'attr' => [
+                'placeholder' => 'Saisissez le titre de votre annonce. Exemple : Monteur de meuble passionné !'
+            ]
+        ])
+            ->add('description', TextareaType::class, [
                 'label' => 'Description',
+                'attr' => [
+                    'placeholder' => 'Décrivez brièvement vos compétences et vos motivations. 🙂'
+                ]
             ])
             ->add('zoneAction', TextType::class, [
                 'label' => 'Zone d\'action',
