@@ -4,15 +4,13 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class DemandeFormType extends AbstractType
 {
@@ -21,14 +19,14 @@ class DemandeFormType extends AbstractType
         $builder
         ->add('titre', TextType::class, [
             'label' => 'Titre',
+            'attr' => [
+                'placeholder' => 'Saisissez un titre pour votre offre',
+            ],
             'constraints' => [
-                new NotBlank([
-                    'message' => 'Veuillez remplir ce champs', 'Attention, vous n\'avez pas renseigner ce champs !',
+                new NotNull([
+                    'message' => 'Veuillez remplir ce champs pour valider',
                 ]),
             ],
-            'attr' => [
-                'placeholder' => 'Saisissez le titre de votre annonce. Exemple : Monteur de meuble passionné !'
-            ]
         ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
