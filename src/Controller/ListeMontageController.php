@@ -141,16 +141,25 @@ class ListeMontageController extends AbstractController
 
         $connectedUser = $this->getUser();
 
-        //Récupérer toutes les offres de montage dans l'entité
+        //Récupérer toutes les offres de demandes montage dans l'entité correspondante
         $listeOffreTravail = $offreDeTravailRepository->findAll();
         $listeDemandeTravail = $demandeDeTravailRepository->findAll();
+
+        // Récupérer le nom du statut pour chaque offre
+        $statusNames = [];
+        foreach ($listeOffreTravail as $offre) {
+            $statusId = $offre->getStatus()->getId();
+            $statusName = $statusOffreRepository->find($statusId)->getNomStatus();
+            $statusNames[$statusId] = $statusName;
+        }
 
 
         return $this->render('listes/OffreMontage.html.twig', [
             'controller_name' => 'ListeMontageController',
             'user' => $connectedUser,
             'listeOffreTravail' => $listeOffreTravail,
-            'listeDemandeTravail' => $listeDemandeTravail
+            'listeDemandeTravail' => $listeDemandeTravail,
+            'statusNames' => $statusNames,
         ]);
     }
 
@@ -166,7 +175,7 @@ class ListeMontageController extends AbstractController
 
         $connectedUser = $this->getUser();
 
-        //Récupérer toutes les offres de montage dans l'entité
+        //Récupérer toutes les offres et demandes de montage dans l'entité correspondante
         $listeOffreTravail = $offreDeTravailRepository->findAll();
         $listeDemandeTravail = $demandeDeTravailRepository->findAll();
 

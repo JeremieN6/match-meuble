@@ -28,6 +28,9 @@
         <div class="containerDescription">
           <p>{{ items.description }}</p>
         </div>
+        <div class="containerStatus">
+          <p>Cette offre est : {{ statusNames[items.status.id] }}</p>
+        </div>
           {# <div class="container_dispo">
             {% if items.status != null %}
             <p class="content_dispo">
