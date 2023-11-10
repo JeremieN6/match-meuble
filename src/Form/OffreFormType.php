@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class OffreFormType extends AbstractType
 {
@@ -19,9 +19,12 @@ class OffreFormType extends AbstractType
         $builder
         ->add('titre', TextType::class, [
             'label' => 'Titre',
+            'attr' => [
+                'placeholder' => 'Saisissez un titre pour votre offre',
+            ],
             'constraints' => [
-                new NotBlank([
-                    'message' => 'Veuillez remplir ce champs', 'Attention, vous n\'avez pas renseigner ce champs !'
+                new NotNull([
+                    'message' => 'Veuillez remplir ce champs pour valider',
                 ]),
             ],
         ])

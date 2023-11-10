@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class DemandeFormType extends AbstractType
 {
@@ -19,6 +21,11 @@ class DemandeFormType extends AbstractType
         $builder
         ->add('titre', TextType::class, [
             'label' => 'Titre',
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Veuillez remplir ce champs', 'Attention, vous n\'avez pas renseigner ce champs !',
+                ]),
+            ],
             'attr' => [
                 'placeholder' => 'Saisissez le titre de votre annonce. Exemple : Monteur de meuble passionné !'
             ]
