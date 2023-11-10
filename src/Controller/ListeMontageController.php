@@ -33,8 +33,9 @@ class ListeMontageController extends AbstractController
         // Récupérer le nom du statut pour chaque offre
         $statusNames = [];
         foreach ($listeOffreTravail as $offre) {
-            $statusId = $offre->getStatus()->getId();
-            $statusName = $statusOffreRepository->find($statusId)->getNomStatus();
+            $status = $offre->getStatus();
+            $statusId = $status ? $status->getId() : null;
+            $statusName = $statusId ? $statusOffreRepository->find($statusId)->getNomStatus() : 'Statut inconnu';
             $statusNames[$statusId] = $statusName;
         }
 
