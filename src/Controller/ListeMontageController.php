@@ -153,7 +153,6 @@ class ListeMontageController extends AbstractController
             $statusNames[$statusId] = $statusName;
         }
 
-
         return $this->render('listes/OffreMontage.html.twig', [
             'controller_name' => 'ListeMontageController',
             'user' => $connectedUser,
