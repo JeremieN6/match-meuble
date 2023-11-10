@@ -146,19 +146,19 @@ class ListeMontageController extends AbstractController
         $listeDemandeTravail = $demandeDeTravailRepository->findAll();
 
         // Récupérer le nom du statut pour chaque offre
-        $statusNames = [];
-        foreach ($listeOffreTravail as $offre) {
-            $statusId = $offre->getStatus()->getId();
-            $statusName = $statusOffreRepository->find($statusId)->getNomStatus();
-            $statusNames[$statusId] = $statusName;
-        }
+        // $statusNames = [];
+        // foreach ($listeOffreTravail as $offre) {
+        //     $statusId = $offre->getStatus()->getId();
+        //     $statusName = $statusOffreRepository->find($statusId)->getNomStatus();
+        //     $statusNames[$statusId] = $statusName;
+        // }
 
         return $this->render('listes/OffreMontage.html.twig', [
             'controller_name' => 'ListeMontageController',
             'user' => $connectedUser,
             'listeOffreTravail' => $listeOffreTravail,
             'listeDemandeTravail' => $listeDemandeTravail,
-            'statusNames' => $statusNames,
+            // 'statusNames' => $statusNames,
         ]);
     }
 
