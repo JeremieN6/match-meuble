@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ListeMontageController extends AbstractController
 {
 
-    #[Route('/formulaire-offre-de-montage', name: 'app_offre_montage')]
+    #[Route('/formulaire-offre-de-montage', name: 'app_form_offre_montage')]
     public function offreMontage(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -66,18 +66,18 @@ class ListeMontageController extends AbstractController
              $flashy->success('Ton offre de montage a été validé avec succès ! 🚀');
  
              //On redirige
-             return $this->redirectToRoute('app_liste_montage');
+             return $this->redirectToRoute('app_liste_offre_montage');
         }
         
 
-        return $this->render('listes/offreMontage.html.twig', [
+        return $this->render('formListes/offreMontage.html.twig', [
             'controller_name' => 'ListeMontageController',
             'offreMontageForm' => $offreMontageForm->createView(),
             'user' => $connectedUser,
         ]);
     }
 
-    #[Route('/formulaire-demande-de-montage', name: 'app_demande_montage')]
+    #[Route('/formulaire-demande-de-montage', name: 'app_form_demande_montage')]
     public function demandeMontage(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -118,19 +118,19 @@ class ListeMontageController extends AbstractController
             $flashy->success('Ta demande de montage a été validé avec succès ! 🚀');
 
             //On redirige
-            return $this->redirectToRoute('app_liste_montage');
+            return $this->redirectToRoute('app_liste_demande_montage');
         }
 
 
-        return $this->render('listes/demandeMontage.html.twig', [
+        return $this->render('formListes/demandeMontage.html.twig', [
             'controller_name' => 'ListeMontageController',
             'demandeMontageForm' => $demandeMontageForm->createView(),
             'user' => $connectedUser,
         ]);
     }
 
-    #[Route('/liste-montage-meuble', name: 'app_liste_montage')]
-    public function listeMontageMeuble(
+    #[Route('/liste-offre-montage', name: 'app_liste_offre_montage')]
+    public function listeOffreMontage(
         Request $request,
         EntityManagerInterface $entityManager,
         OffreDeTravailRepository $offreDeTravailRepository,
@@ -146,7 +146,32 @@ class ListeMontageController extends AbstractController
         $listeDemandeTravail = $demandeDeTravailRepository->findAll();
 
 
-        return $this->render('listes/listeMontageMeuble.html.twig', [
+        return $this->render('listes/OffreMontage.html.twig', [
+            'controller_name' => 'ListeMontageController',
+            'user' => $connectedUser,
+            'listeOffreTravail' => $listeOffreTravail,
+            'listeDemandeTravail' => $listeDemandeTravail
+        ]);
+    }
+
+    #[Route('/liste-demande-montage', name: 'app_liste_demande_montage')]
+    public function listeDemandeMontage(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        OffreDeTravailRepository $offreDeTravailRepository,
+        DemandeDeTravailRepository $demandeDeTravailRepository,
+        StatusOffreRepository $statusOffreRepository,
+        \MercurySeries\FlashyBundle\FlashyNotifier $flashy
+    ): Response {
+
+        $connectedUser = $this->getUser();
+
+        //Récupérer toutes les offres de montage dans l'entité
+        $listeOffreTravail = $offreDeTravailRepository->findAll();
+        $listeDemandeTravail = $demandeDeTravailRepository->findAll();
+
+
+        return $this->render('listes/DemandeMontage.html.twig', [
             'controller_name' => 'ListeMontageController',
             'user' => $connectedUser,
             'listeOffreTravail' => $listeOffreTravail,

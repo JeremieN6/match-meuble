@@ -1,11 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Match Montage+ | Formulaire demande pour montage{% endblock %}
+{% block title %}Match Meuble+ | Liste Demandes{% endblock %}
 
 {% block body %}
 
-{{ form_start(demandeMontageForm) }}
-{{ form_end(demandeMontageForm) }}
-<button class="outline"><a href="{{path('app_home')}}">Retour</a></buttton>
+<hgroup>
+  <h1>Liste des demandes</h1>
+  <p>Voici la liste des demandes de montage de meuble</p>
+</hgroup>
 
+<div class="grid">
+  <button> <a href="{{ path('app_liste_offre_montage')}}">Voir la liste des offres</a></button>
+</div>
+
+<div class="container_articles">
+  {% for items in listeDemandeTravail %}
+    <article id="article" class="myCard">
+      <div class="container_image">
+        <img src="https://images.pexels.com/photos/4554426/pexels-photo-4554426.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="Bureau Gamer" class="content_img">
+      </div>
+      <div class="container_detail_profil">
+        <div class="containerTitre">
+          <p class="contentTitre">
+            <h4>{{ items.titre }} </h4>
+          </p>
+        </div>
+        <hgroup>
+          <div class="containerDescription">
+            <p>{{ items.description }}</p>
+          </div>
+          <div class="container_dispo">
+            {% if items.disponibilite != null %}
+            <p class="content_dispo">
+              Disponible : {{items.disponibilite}}
+            </p>
+            {% else %}
+            <p class="content_dispo">
+              Disponibilité non renseigné
+            </p>
+            {% endif %}
+          </div>
+          <div class="container_remuneration">
+            <p class="content_remuneration">Rémunération : {{items.salaire}}€/heure</p>
+          </div>
+          <div class="containerZoneAction">
+            <p>Zone d'action : {{ items.zoneAction }} autour de ma ville.</p>
+          </div>
+        </hgroup>
+      </div>
+    </article>
+  {% endfor %}
+
+  </div>
 {% endblock %}

@@ -29,10 +29,10 @@ class DemandeFormType extends AbstractType
                     'placeholder' => 'Décrivez brièvement vos compétences et vos motivations. 🙂'
                 ]
             ])
-            ->add('zoneAction', TextType::class, [
+            ->add('zoneAction', IntegerType::class, [
                 'label' => 'Zone d\'action',
                 'attr' => [
-                    'placeholder' => 'Quel est votre périmètre d\'action ?'
+                    'placeholder' => 'De combien de Km autour de votre ville êtes vous en action ?'
                 ],
             ])
             ->add('disponibilite', ChoiceType::class, [

@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Match Montage+ | Formulaire offre pour montage {% endblock %}
+
+{% block body %}
+
+{{ form_start(offreMontageForm) }}
+{{ form_end(offreMontageForm) }}
+<button class="outline"><a href="{{path('app_home')}}">Retour</a></buttton>
+{% endblock %}
