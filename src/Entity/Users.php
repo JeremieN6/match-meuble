@@ -408,6 +408,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface, Serial
         return $this;
     }
 
+    /**
+     * @see \Serializable::serialize()
+     */
     public function serialize()
     {
         return serialize(array(
@@ -420,16 +423,19 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface, Serial
         ));
     }
 
+    /**
+     * @see \Serializable::unserialize()
+     */
     public function unserialize($serialized)
     {
-        list (
+        [
             $this->id,
             $this->email,
             $this->password,
             $this->file,
-            // see section on salt below
+            // voir la section sur le sel ci-dessous
             // $this->salt
-        ) = unserialize($serialized);
+        ] = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     /**
