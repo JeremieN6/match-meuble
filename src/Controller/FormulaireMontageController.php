@@ -39,6 +39,7 @@ class FormulaireMontageController extends AbstractController
             //Récupérer les réponses du formulaire
             $reponsesData = $offreMontageForm->getData();
 
+            $titre = $reponsesData['titre'];
             $description = $reponsesData['description'];
             $localisation = $reponsesData['localisation'];
             $remuneration = $reponsesData['remuneration'];
@@ -50,8 +51,9 @@ class FormulaireMontageController extends AbstractController
 
             $offerMontageEntity = new OffreDeTravail();
             $offerMontageEntity->setUserId($connectedUser);
-            $offerMontageEntity->setStatus($statusLibre);
+            $offerMontageEntity->settitre($titre);
             $offerMontageEntity->setDescription($description);
+            $offerMontageEntity->setStatus($statusLibre);
             $offerMontageEntity->setLocalisation($localisation);
             $offerMontageEntity->setRemuneration($remuneration);
             $offerMontageEntity->setDateDebutMontage($dateDebutMontage);
@@ -96,6 +98,7 @@ class FormulaireMontageController extends AbstractController
             //Récupérer les réponses du formulaire
             $reponsesData = $demandeMontageForm->getData();
 
+            $titre = $reponsesData['titre'];
             $description = $reponsesData['description'];
             $disponibilite = $reponsesData['disponibilite'];
             $zoneAction = $reponsesData['zoneAction'];
@@ -103,6 +106,7 @@ class FormulaireMontageController extends AbstractController
             
             $demandeMontageEntity = new DemandeDeTravail();
             $demandeMontageEntity->setUserId($connectedUser);
+            $demandeMontageEntity->setTitre($titre);
             $demandeMontageEntity->setDescription($description);
             $demandeMontageEntity->setDisponibilite($disponibilite);
             $demandeMontageEntity->setZoneAction($zoneAction);

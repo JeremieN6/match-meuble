@@ -21,12 +21,7 @@ class DemandeFormType extends AbstractType
             'label' => 'Titre',
             'attr' => [
                 'placeholder' => 'Saisissez un titre pour votre offre',
-            ],
-            'constraints' => [
-                new NotNull([
-                    'message' => 'Veuillez remplir ce champs pour valider',
-                ]),
-            ],
+            ]
         ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
