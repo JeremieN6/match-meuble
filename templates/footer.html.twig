@@ -1,3 +1,71 @@
-<footer class="container">
-    <small>Développé par • <a class="secondary">JeremieCode™ Corp</a></small>
+<footer class="bg-white dark:bg-gray-900">
+    <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+        <div class="md:flex md:justify-between">
+            <div class="mb-6 md:mb-0">
+                <a href="{{ path('app_home') }}" class="flex items-center">
+                    <i class="fas fa-tools text-2xl text-primary-600 mr-3"></i>
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Match Meuble</span>
+                </a>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    Facilitez la rencontre entre l'offre et la demande<br>
+                    pour le montage de meubles.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+                <div>
+                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Services</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                        {% if app.user %}
+                        <li class="mb-4">
+                            <a href="{{ path('app_form_offre_montage') }}" class="hover:underline">Déposer une offre</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_form_demande_montage') }}" class="hover:underline">Déposer une demande</a>
+                        </li>
+                        {% else %}
+                        <li class="mb-4">
+                            <a href="{{ path('app_register') }}" class="hover:underline">Inscription</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_login') }}" class="hover:underline">Connexion</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Support</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                        <li class="mb-4">
+                            <a href="{{ path('app_contact') }}" class="hover:underline">Contact</a>
+                        </li>
+                        <li>
+                            <a href="#" class="hover:underline">FAQ</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Légal</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Politique de confidentialité</a>
+                        </li>
+                        <li>
+                            <a href="#" class="hover:underline">Conditions d'utilisation</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+        <div class="sm:flex sm:items-center sm:justify-between">
+            <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+                © {{ "now"|date("Y") }} <a href="{{ path('app_home') }}" class="hover:underline">Match Meuble™</a>. Tous droits réservés.
+            </span>
+            <div class="flex mt-4 sm:justify-center sm:mt-0">
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    Développé par <a href="#" class="hover:underline font-medium">JeremieCode™ Corp</a>
+                </span>
+            </div>
+        </div>
+    </div>
 </footer>

@@ -1,78 +1,157 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Match Montage+ | Accueil{% endblock %}
+{% block title %}Match Meuble | Accueil{% endblock %}
 
 {% block body %}
-  <div class="grid">
-    <hgroup>
-      <h1>La solution n°1 pour monter ou faire monter vos meubles !</h1> <br>
-      <p>
-        Découvrez Match Montage+, la plateforme qui simplifie la vie de ceux 
-        qui ont besoin d'aide pour monter des meubles et de ceux qui aiment le faire. <br>
-        Trouvez des monteurs compétents ou proposez vos services en quelques clics.
-      </p>
-        <div class="grid">
-          <button><a href="{{path('app_liste_offre_montage')}}">Démarrer</a></buttton>
-          <button class="outline"><a href="{{path('about')}}">En savoir plus</a></buttton>
+<!-- Hero Section -->
+<section class="bg-white dark:bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
+        <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+            La solution n°1 pour monter vos meubles !
+        </h1>
+        <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">
+            Découvrez Match Meuble, la plateforme qui simplifie la vie de ceux qui ont besoin d'aide pour monter des meubles et de ceux qui aiment le faire. Trouvez des monteurs compétents ou proposez vos services en quelques clics.
+        </p>
+        <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
+            <a href="{{ path('app_liste_offre_montage') }}" class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                Démarrer
+                <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+            </a>
+            <a href="{{ path('about') }}" class="py-3 px-5 sm:ms-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                En savoir plus
+            </a>
         </div>
-    </hgroup>
-    <div>
-      <img src="{{asset('/images/banner-2.png')}}" alt="Illustration 3D Montage">
     </div>
-  </div>
-  <hgroup>
-    <h2>Notre promesse</h2>
-    <p>
-      Que vous soyez en train de déménager, de rénover ou simplement de chercher de l'aide pour monter un meuble, 
-      Match Montage+ est là pour vous connecter avec des personnes prêtes à rendre votre tâche plus facile. <br>
-      Inscrivez-vous dès aujourd'hui pour découvrir comment Match Montage+ facilite la mise en relation, la communication
-      et la planification, tout en construisant une communauté de passionnés du montage de meubles. 
-      Votre solution pour des montages sans souci est à portée de main.
-    </p>
-  </hgroup>
+</section>
 
+<!-- Image Section -->
+<section class="bg-gray-50 dark:bg-gray-800">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
+        <div class="text-center">
+            <img src="{{ asset('/images/banner-2.png') }}" alt="Illustration 3D Montage" class="mx-auto max-w-full h-auto rounded-lg shadow-lg">
+        </div>
+    </div>
+</section>
+<!-- Notre promesse Section -->
+<section class="bg-white dark:bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
+        <div class="text-center">
+            <h2 class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl dark:text-white">
+                Notre promesse
+            </h2>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">
+                Que vous soyez en train de déménager, de rénover ou simplement de chercher de l'aide pour monter un meuble,
+                Match Meuble est là pour vous connecter avec des personnes prêtes à rendre votre tâche plus facile.
+            </p>
+            <p class="text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">
+                Inscrivez-vous dès aujourd'hui pour découvrir comment Match Meuble facilite la mise en relation, la communication
+                et la planification, tout en construisant une communauté de passionnés du montage de meubles.
+                Votre solution pour des montages sans souci est à portée de main.
+            </p>
+        </div>
+    </div>
+</section>
 
-  <hgroup>
-  <h2>Nos client(e)s en parlent pour nous !</h2>
-  <div class="grid">
-    <article id="article">
-      <h3><em>«Une super application conviviale et pratique»</em></h3>
-      <p>
-        Grâce à Match Montage+, j'ai trouvé un monteur de meubles compétent en un temps record. 
-        Cela a rendu mon déménagement bien moins stressant. 
-        Je recommande cette application à quiconque a besoin d'aide pour monter ses meubles ! <br>
-        D'ailleurs j'ai une amis qui a un évenement et doit louer du mobilié, elle sera ravie de savoir que ce service existe. <br>
-        Merci à vous !
-      </p>
-      <footer><small>Par Sophie G.</small></footer>
-    </article>
+<!-- Témoignages Section -->
+<section class="bg-gray-50 dark:bg-gray-800">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
+        <div class="text-center mb-8">
+            <h2 class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl dark:text-white">
+                Nos client(e)s en parlent pour nous !
+            </h2>
+        </div>
 
-    <article id="article">
-      <h3><em>«Une nouvelle façon de faire un peu d'argent.»</em></h3>
-      <p>
-        J'ai récemment proposé mes services sur Match Montage+ et j'ai été surpris de voir à quel point la communauté est accueillante. <br>
-        J'ai pu gagner de l'argent en faisant ce que j'aime, et j'ai rencontré des personnes formidables en cours de route. <br>
-        C'est la plateforme idéale pour créer des liens et partager des compétences.<br>
-        Une expérience incroyable !
-      </p>
-      <footer><small>Par Maxime L.</small></footer>
-    </article>
-  </div>
-  </hgroup>
+        <div class="grid gap-8 lg:grid-cols-2">
+            <!-- Témoignage 1 -->
+            <div class="bg-white rounded-lg shadow-lg p-6 dark:bg-gray-900">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <h3 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+                    "Une super application conviviale et pratique"
+                </h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-4">
+                    Grâce à Match Meuble, j'ai trouvé un monteur de meubles compétent en un temps record.
+                    Cela a rendu mon déménagement bien moins stressant.
+                    Je recommande cette application à quiconque a besoin d'aide pour monter ses meubles !
+                </p>
+                <p class="text-gray-500 dark:text-gray-400 mb-4">
+                    D'ailleurs j'ai une amie qui a un événement et doit louer du mobilier, elle sera ravie de savoir que ce service existe.
+                    Merci à vous !
+                </p>
+                <footer class="text-sm text-gray-400 dark:text-gray-500">
+                    — Sophie G.
+                </footer>
+            </div>
 
-  <hgroup>
-    <h3>S'abonner</h3>
-    <small><p>Abonnez vous à la newsletter pour être au courant des prochaines promotions, mises à jours et jeux concours. 🙂</p></small>
-  </hgroup>
+            <!-- Témoignage 2 -->
+            <div class="bg-white rounded-lg shadow-lg p-6 dark:bg-gray-900">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <h3 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+                    "Une nouvelle façon de faire un peu d'argent"
+                </h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-4">
+                    J'ai récemment proposé mes services sur Match Meuble et j'ai été surpris de voir à quel point la communauté est accueillante.
+                    J'ai pu gagner de l'argent en faisant ce que j'aime, et j'ai rencontré des personnes formidables en cours de route.
+                </p>
+                <p class="text-gray-500 dark:text-gray-400 mb-4">
+                    C'est la plateforme idéale pour créer des liens et partager des compétences.
+                    Une expérience incroyable !
+                </p>
+                <footer class="text-sm text-gray-400 dark:text-gray-500">
+                    — Maxime L.
+                </footer>
+            </div>
+        </div>
+    </div>
+</section>
 
+<!-- Newsletter Section -->
+<section class="bg-white dark:bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
+        <div class="mx-auto max-w-screen-md text-center">
+            <h2 class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl dark:text-white">
+                S'abonner à la newsletter
+            </h2>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+                Abonnez-vous à la newsletter pour être au courant des prochaines promotions, mises à jour et jeux concours. 🙂
+            </p>
 
-
-      {{ form_start(formNewsletter) }}
-      <div class="grid">
-      {{ form_row(formNewsletter.email) }}
-      {{form_row(formNewsletter.submit)}}
-    
-    {{ form_end(formNewsletter) }}
-  </div>
+            {{ form_start(formNewsletter, {'attr': {'class': 'space-y-4'}}) }}
+            <div class="flex flex-col sm:flex-row sm:space-x-3 sm:space-y-0 space-y-3">
+                <div class="flex-1">
+                    {{ form_widget(formNewsletter.email, {
+                        'attr': {
+                            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500',
+                            'placeholder': 'Votre adresse email'
+                        }
+                    }) }}
+                </div>
+                {{ form_widget(formNewsletter.submit, {
+                    'attr': {
+                        'class': 'py-2.5 px-5 text-sm font-medium text-white bg-primary-700 rounded-lg border border-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
+                    }
+                }) }}
+            </div>
+            {{ form_end(formNewsletter) }}
+        </div>
+    </div>
+</section>
 
 {% endblock %}
