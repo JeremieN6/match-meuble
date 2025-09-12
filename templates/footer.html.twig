@@ -1,71 +1,37 @@
-<footer class="bg-white dark:bg-gray-900">
-    <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
-        <div class="md:flex md:justify-between">
-            <div class="mb-6 md:mb-0">
-                <a href="{{ path('app_home') }}" class="flex items-center">
-                    <i class="fas fa-tools text-2xl text-primary-600 mr-3"></i>
-                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Match Meuble</span>
-                </a>
-                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    Facilitez la rencontre entre l'offre et la demande<br>
-                    pour le montage de meubles.
-                </p>
-            </div>
-            <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
-                <div>
-                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Services</h2>
-                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
-                        {% if app.user %}
-                        <li class="mb-4">
-                            <a href="{{ path('app_form_offre_montage') }}" class="hover:underline">Déposer une offre</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('app_form_demande_montage') }}" class="hover:underline">Déposer une demande</a>
-                        </li>
-                        {% else %}
-                        <li class="mb-4">
-                            <a href="{{ path('app_register') }}" class="hover:underline">Inscription</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('app_login') }}" class="hover:underline">Connexion</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <div>
-                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Support</h2>
-                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
-                        <li class="mb-4">
-                            <a href="{{ path('app_contact') }}" class="hover:underline">Contact</a>
-                        </li>
-                        <li>
-                            <a href="#" class="hover:underline">FAQ</a>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Légal</h2>
-                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Politique de confidentialité</a>
-                        </li>
-                        <li>
-                            <a href="#" class="hover:underline">Conditions d'utilisation</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-        <div class="sm:flex sm:items-center sm:justify-between">
-            <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-                © {{ "now"|date("Y") }} <a href="{{ path('app_home') }}" class="hover:underline">Match Meuble™</a>. Tous droits réservés.
-            </span>
-            <div class="flex mt-4 sm:justify-center sm:mt-0">
-                <span class="text-sm text-gray-500 dark:text-gray-400">
-                    Développé par <a href="#" class="hover:underline font-medium">JeremieCode™ Corp</a>
-                </span>
-            </div>
-        </div>
-    </div>
+<!-- Footer -->
+<footer class="p-8 bg-gray-100 md:p-8 lg:p-10 dark:bg-gray-900">
+	<div class="mx-auto max-w-screen-xl text-center">
+		<a aria-current="page" href="{{ path('app_home') }}" class="router-link-active router-link-exact-active flex justify-center items-center text-2xl font-semibold text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300">
+            <span class="self-center text-2xl italic font-semibold whitespace-nowrap dark:text-white">🛠️ MatchMeuble</span>
+		</a>
+		<p class="my-6 text-gray-500 dark:text-gray-400">© 2025 Match Meuble – Mise en relation pour montage de meuble.</p>
+		<ul class="flex flex-wrap justify-center items-center mb-6 text-gray-900 dark:text-white">
+			<li>
+				<a aria-current="page" href="{{ path('app_home') }}" class="router-link-active router-link-exact-active mr-4 hover:underline md:mr-6">Accueil</a>
+			</li>
+			<li>
+				<a href="#" class="router-link-active router-link-exact-active mr-4 hover:underline md:mr-6">Faq</a>
+			</li>
+			<li>
+				<a href="{{ path('app_contact') }}" class="mr-4 hover:underline md:mr-6">Contact</a>
+			</li>
+            <li>
+				<a href="#" class="router-link-active router-link-exact-active mr-4 hover:underline md:mr-6">Blog</a>
+			</li>
+			<li>
+				<a href="{{ path('app_home') }}" class="mr-4 hover:underline md:mr-6">Politique de confidentialité</a>
+			</li>
+            <li>
+				<a href="{{ path('app_home') }}" class="mr-4 hover:underline md:mr-6">Condition d'utilisation</a>
+			</li>
+		</ul>
+		<span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025
+			<a class="hover:underline">Match Meuble™</a>.
+			<br>
+			<br>
+			Site web réalisé avec 💖 par
+			<a href="https://jeremiecode.fr">JeremieCode™ Corp</a>
+			• All Rights Reserved.
+		</span>
+	</div>
 </footer>

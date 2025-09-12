@@ -22,9 +22,6 @@ Encore
      */
     .addEntry('app', './assets/app.js')
 
-    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
-    .enableStimulusBridge('./assets/controllers.json')
-
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
@@ -40,34 +37,42 @@ Encore
      * https://symfony.com/doc/current/frontend.html#adding-more-features
      */
     .cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
+
+    // Displays build status system notifications to the user
+    // .enableBuildNotifications()
+
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
     // configure Babel
     // .configureBabel((config) => {
-    //     config.plugins.push('@babel/plugin-proposal-class-properties');
+    //     config.plugins.push('@babel/a-babel-plugin');
     // })
 
     // enables and configure @babel/preset-env polyfills
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
-        config.corejs = '3.23';
+        config.corejs = '3.38';
+    })
+
+    // Enable Vue.js support
+    .enableVueLoader(() => {}, {
+        runtimeCompilerBuild: false
+    })
+
+    // Enable PostCSS support for Tailwind CSS
+    .enablePostCssLoader()
+
+    // Configure Vue.js feature flags
+    .configureDefinePlugin(options => {
+        options.__VUE_OPTIONS_API__ = true;
+        options.__VUE_PROD_DEVTOOLS__ = false;
+        options.__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = false;
     })
 
     // enables Sass/SCSS support
     //.enableSassLoader()
-
-    // enables PostCSS support
-    .enablePostCssLoader((options) => {
-        options.postcssOptions = {
-            plugins: [
-                require('tailwindcss'),
-                require('autoprefixer'),
-            ]
-        }
-    })
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
