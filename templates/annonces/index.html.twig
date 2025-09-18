@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MatchMeuble | Annonces (Offres & Demandes){% endblock %}
+
+{% block body %}
+<section class="bg-surface-50 dark:bg-gray-900 py-10 lg:py-14">
+  <div class="max-w-screen-xl mx-auto px-4">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">Annonces</h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Parcourez toutes les offres et demandes de montage de meuble.</p>
+      </div>
+      <!-- Filtres -->
+      <div class="flex flex-wrap items-center gap-3">
+        <select id="filter-type" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+          <option value="all">Tous les types</option>
+          <option value="offre">Offres</option>
+          <option value="demande">Demandes</option>
+        </select>
+        <input id="filter-q" type="search" placeholder="Rechercher..." class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
+        <button id="filter-reset" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Réinitialiser</button>
+      </div>
+    </div>
+
+    <div id="cards-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {% for card in cards %}
+      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 card-item" data-type="{{ card.type }}" data-title="{{ card.title|lower }}" data-desc="{{ card.description|lower }}" data-localisation="{{ (card.localisation ?? '')|lower }}">
+        <a href="{{ card.href }}">
+          <img class="rounded-t-lg w-full h-44 object-cover" src="{{ card.image }}" alt="" />
+        </a>
+        <div class="p-5">
+          <a href="{{ card.href }}">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ card.title }}</h5>
+          </a>
+          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ card.description }}</p>
+          <a href="{{ card.href }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">
+            {{ card.cta }}
+            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const typeSel = document.getElementById('filter-type');
+      const qInput = document.getElementById('filter-q');
+      const resetBtn = document.getElementById('filter-reset');
+      const items = Array.from(document.querySelectorAll('.card-item'));
+
+      function applyFilters() {
+        const type = typeSel.value;
+        const q = (qInput.value || '').trim().toLowerCase();
+
+        items.forEach(el => {
+          const matchesType = type === 'all' || el.dataset.type === type;
+          const haystack = `${el.dataset.title} ${el.dataset.desc} ${el.dataset.localisation}`;
+          const matchesQuery = q === '' || haystack.includes(q);
+          el.style.display = (matchesType && matchesQuery) ? '' : 'none';
+        });
+      }
+
+      typeSel.addEventListener('change', applyFilters);
+      qInput.addEventListener('input', applyFilters);
+      resetBtn.addEventListener('click', () => {
+        typeSel.value = 'all';
+        qInput.value = '';
+        applyFilters();
+      });
+
+      applyFilters();
+    });
+  </script>
+{% endblock %}
+{% endblock %}
