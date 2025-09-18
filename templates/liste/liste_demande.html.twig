@@ -4,52 +4,37 @@
 
 {% block body %}
 
-<hgroup>
-  <h1>Liste des demandes</h1>
-  <p>Voici la liste des demandes de montage de meuble</p>
-</hgroup>
-
-<div class="grid">
-  <button> <a href="{{ path('app_liste_offre_montage')}}">Voir la liste des offres</a></button>
-</div>
-
-<div class="container_articles">
-  {% for items in listeDemandeTravail %}
-    <article id="article" class="myCard">
-      <div class="container_image">
-        <img src="https://images.pexels.com/photos/4554426/pexels-photo-4554426.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="Bureau Gamer" class="content_img">
+<section class="bg-surface-50 dark:bg-gray-900 py-10 lg:py-14">
+  <div class="max-w-screen-xl mx-auto px-4">
+    <div class="flex items-center justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">Liste des demandes</h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Voici les demandes de montage de meuble.</p>
       </div>
-      <div class="container_detail_profil">
-        <div class="containerTitre">
-          <p class="contentTitre">
-            <h4>{{ items.titre }} </h4>
-          </p>
+      <a href="{{ path('app_liste_offre_montage') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Voir les offres</a>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {% for card in demandeCards %}
+      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <a href="{{ card.href }}">
+          <img class="rounded-t-lg w-full h-44 object-cover" src="{{ card.image }}" alt="" />
+        </a>
+        <div class="p-5">
+          <a href="{{ card.href }}">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ card.title }}</h5>
+          </a>
+          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ card.description }}</p>
+          <a href="{{ card.href }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">
+            {{ card.cta }}
+            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+            </svg>
+          </a>
         </div>
-        <hgroup>
-          <div class="containerDescription">
-            <p>{{ items.description }}</p>
-          </div>
-          <div class="container_dispo">
-            {% if items.disponibilite != null %}
-            <p class="content_dispo">
-              Disponible : {{items.disponibilite}}
-            </p>
-            {% else %}
-            <p class="content_dispo">
-              Disponibilité non renseigné
-            </p>
-            {% endif %}
-          </div>
-          <div class="container_remuneration">
-            <p class="content_remuneration">Rémunération : {{items.salaire}}€/heure</p>
-          </div>
-          <div class="containerZoneAction">
-            <p>Zone d'action : {{ items.zoneAction }} autour de ma ville.</p>
-          </div>
-        </hgroup>
       </div>
-    </article>
-  {% endfor %}
-
+      {% endfor %}
+    </div>
   </div>
+</section>
 {% endblock %}

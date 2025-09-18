@@ -4,55 +4,37 @@
 
 {% block body %}
 
-<hgroup>
-    <h1>Liste des offres</h1>
-    <p>Voici la liste des offres de montage de meuble</p>
-</hgroup>
-
-<div class="grid">
-  <button> <a href="{{ path('app_liste_demande_montage')}}">Voir la liste des demandes</a></button>
-</div>
-
-<div class="container_articles">
-  {% for items in listeOffreTravail %}
-    <article id="article" class="myCard">
-      <div class="container_image">
-        <img src="https://images.pexels.com/photos/4554438/pexels-photo-4554438.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bureau Gamer" class="content_img">
+<section class="bg-surface-50 dark:bg-gray-900 py-10 lg:py-14">
+  <div class="max-w-screen-xl mx-auto px-4">
+    <div class="flex items-center justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">Liste des offres</h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Voici les offres de montage de meuble.</p>
       </div>
-      <div class="containerTitre">
-          <h3>{{ items.titre }}</h3>
-      </div>
-      <hgroup>
-        <div class="containerDescription">
-          <p>{{ items.description }}</p>
-        </div>
-        <div class="containerStatus">
-          <p>Cette offre est : {{ statusNames[items.status.id] }}</p>
-        </div>
-          {# <div class="container_dispo">
-            {% if items.status != null %}
-            <p class="content_dispo">
-              Disponible : {{ items.status }}
-            </p>
-            {% else %}
-            <p class="content_dispo">
-              Disponobilité non renseigné
-            </p>
-            {% endif %}
-          </div> #}
-          <div class="container_remuneration">
-            <p class="content_remuneration">Rémunération : {{ items.remuneration }}€.</p>
-          </div>
-        <div class="container_localisation">
-          <p>{{ items.localisation }}</p>
-        </div>
-        <div class="container_date">
-          <p> Prévu du : {{ items.dateDebutMontage.format('d/m/Y') }} <br>
-            au : {{ items.dateFinMontage.format('d/m/Y') }}
-        </div>
-      </hgroup>
-    </article>
-  {% endfor %}
+      <a href="{{ path('app_liste_demande_montage') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Voir les demandes</a>
+    </div>
 
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {% for card in offreCards %}
+      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <a href="{{ card.href }}">
+          <img class="rounded-t-lg w-full h-44 object-cover" src="{{ card.image }}" alt="" />
+        </a>
+        <div class="p-5">
+          <a href="{{ card.href }}">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ card.title }}</h5>
+          </a>
+          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ card.description }}</p>
+          <a href="{{ card.href }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">
+            {{ card.cta }}
+            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
+</section>
 {% endblock %}

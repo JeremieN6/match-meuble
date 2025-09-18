@@ -13,6 +13,51 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ListeMontageController extends AbstractController
 {
+    private function buildOffreCards(array $offres): array
+    {
+        $cards = [];
+        foreach ($offres as $offre) {
+            $title = $offre->getTitre() ?: 'Offre de montage';
+            $desc = $offre->getDescription() ?: 'Offre sans description fournie.';
+            if (mb_strlen($desc) > 160) {
+                $desc = mb_substr($desc, 0, 157) . '…';
+            }
+            $cards[] = [
+                'title' => $title,
+                'description' => $desc,
+                'image' => 'https://images.pexels.com/photos/5582598/pexels-photo-5582598.jpeg?auto=compress&cs=tinysrgb&w=600',
+                'href' => '#',
+                'cta' => 'Voir l\'offre',
+            ];
+        }
+
+        
+
+        return $cards;
+    }
+
+    private function buildDemandeCards(array $demandes): array
+    {
+        $cards = [];
+        foreach ($demandes as $demande) {
+            $title = $demande->getTitre() ?: 'Demande de montage';
+            $desc = $demande->getDescription() ?: 'Demande sans description fournie.';
+            if (mb_strlen($desc) > 160) {
+                $desc = mb_substr($desc, 0, 157) . '…';
+            }
+            $cards[] = [
+                'title' => $title,
+                'description' => $desc,
+                'image' => 'https://images.pexels.com/photos/4247947/pexels-photo-4247947.jpeg?auto=compress&cs=tinysrgb&w=600',
+                'href' => '#',
+                'cta' => 'Voir la demande',
+            ];
+        }
+
+        
+
+        return $cards;
+    }
 
     #[Route('/liste-offre-montage', name: 'app_liste_offre_montage')]
     public function listeOffreMontage(
@@ -39,12 +84,15 @@ class ListeMontageController extends AbstractController
             $statusNames[$statusId] = $statusName;
         }
 
+        $offreCards = $this->buildOffreCards($listeOffreTravail);
+
         return $this->render('liste/liste_offre.html.twig', [
             'controller_name' => 'ListeMontageController',
             'user' => $connectedUser,
             'listeOffreTravail' => $listeOffreTravail,
             'listeDemandeTravail' => $listeDemandeTravail,
             'statusNames' => $statusNames,
+            'offreCards' => $offreCards,
         ]);
     }
 
@@ -64,12 +112,14 @@ class ListeMontageController extends AbstractController
         $listeOffreTravail = $offreDeTravailRepository->findAll();
         $listeDemandeTravail = $demandeDeTravailRepository->findAll();
 
+        $demandeCards = $this->buildDemandeCards($listeDemandeTravail);
 
         return $this->render('liste/liste_demande.html.twig', [
             'controller_name' => 'ListeMontageController',
             'user' => $connectedUser,
             'listeOffreTravail' => $listeOffreTravail,
-            'listeDemandeTravail' => $listeDemandeTravail
+            'listeDemandeTravail' => $listeDemandeTravail,
+            'demandeCards' => $demandeCards,
         ]);
     }
 }
