@@ -4,14 +4,26 @@
 
 {% block body %}
 
-<hgroup>
-    <h1>Formulaire de demande</h1>
-    <h2>Formulaire pour une demande de montage de meuble.</h2>
-</hgroup>
+<section class="bg-surface-50 dark:bg-gray-900">
+    <div class="max-w-screen-lg mx-auto px-4 py-10 lg:py-14">
+        <div class="mb-6">
+            <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">Faire une demande</h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Formulaire pour une demande de montage de meuble.</p>
+        </div>
 
-
-{{ form_start(demandeMontageForm) }}
-{{ form_end(demandeMontageForm) }}
-<button class="outline"><a href="{{path('app_home')}}">Retour</a></buttton>
+        <div class="rounded-xl border border-surface-200 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-sm">
+            <div class="p-6 lg:p-8">
+                {% form_theme demandeMontageForm 'form/_tailwind_theme.html.twig' %}
+                {{ form_start(demandeMontageForm, {'attr': {'class': 'space-y-6'}}) }}
+                    {{ form_widget(demandeMontageForm) }}
+                    <div class="flex items-center gap-3 pt-2">
+                        <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 rounded-lg dark:bg-primary-600 dark:hover:bg-primary-700">Soumettre la demande</button>
+                        <a href="{{ path('app_home') }}" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">Retour</a>
+                    </div>
+                {{ form_end(demandeMontageForm) }}
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

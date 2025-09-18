@@ -1,62 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Match Montage+ | ChatBot {% endblock %}
+{% block title %}À propos | Match Meuble{% endblock %}
 
 {% block body %}
+    <!-- Hero -->
+    <section class="bg-surface-50 dark:bg-gray-900">
+        <div class="max-w-screen-xl mx-auto px-4 py-12 lg:py-20">
+            <div class="text-center">
+                <span class="inline-flex items-center px-3 py-1 text-sm rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900/40 dark:text-primary-200">À propos</span>
+                <h1 class="mt-4 text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                    A propos de nous
+                </h1>
+                <p class="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Voici quelques mots sur notre projet, notre vision et sa construction.
+                </p>
+                <div class="mt-8 flex justify-center gap-3">
+                    <a href="{{ path('app_form_demande_montage') }}" class="inline-flex items-center px-5 py-3 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 rounded-lg dark:bg-primary-600 dark:hover:bg-primary-700">
+                        Démarrer maintenant
+                        <svg class="ml-2 w-4 h-4" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    </a>
+                    <a href="{{ path('about') }}" class="inline-flex items-center px-5 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        En savoir plus
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<hgroup>
-    <h1>A propos de nous</h1>
-    <p>Voici quelques mots sur notre projet, notre vision et sa construction.</p>
-</hgroup>
+    <!-- Grille de cartes -->
+    <section class="bg-white dark:bg-gray-800">
+        <div class="max-w-screen-xl mx-auto px-4 py-12 lg:py-20">
+            <div class="grid gap-6 md:grid-cols-2">
+                <!-- Notre histoire -->
+                <div class="p-6 rounded-xl border border-surface-200 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Notre histoire</h2>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        Notre histoire débute avec un passionné de technologie qui a décidé de créer une plateforme dédiée à faciliter le quotidien de ceux qui cherchent de l'aide pour le montage de meubles. Cette application a pris forme pendant des heures dédiées en dehors du bureau, animée par la conviction que la technologie peut rendre les services de montage de meubles plus accessibles et efficaces.
+                    </p>
+                </div>
 
+                <!-- Pourquoi nous existons -->
+                <div class="p-6 rounded-xl border border-surface-200 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-sm">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Pourquoi nous existons</h3>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        Nous sommes nés de la nécessité de simplifier un processus parfois fastidieux : le montage de meubles. Notre objectif est de connecter de manière fluide ceux qui ont besoin d'aide pour assembler leurs meubles avec des professionnels ou des passionnés compétents. Nous croyons que la technologie peut transformer cette expérience souvent stressante en quelque chose de simple, rapide et même agréable.
+                    </p>
+                </div>
 
-<h2>Notre histoire</h2>
-<p>
-    Notre histoire débute avec un passionné de technologie qui a décidé de créer une plateforme dédiée à faciliter le 
-    quotidien de ceux qui cherchent de l'aide pour le montage de meubles. <br>
-    Cette application a pris forme pendant des heures dédiées en dehors du bureau, animé 
-    par la conviction que la technologie peut rendre les services de montage de meubles plus accessibles et efficaces.
-</p>
+                <!-- Utilité de l'application -->
+                <div class="p-6 rounded-xl border border-surface-200 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-sm">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">L'utilité de notre application</h3>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        Dans un monde où les agendas sont chargés et où le temps est précieux, notre application offre une solution précieuse. Elle permet à ceux qui cherchent de l'aide pour le montage de meubles de trouver rapidement des personnes qualifiées et disponibles. C'est une plateforme où la communauté se rassemble pour rendre le processus de montage de meubles aussi sans tracas que possible.
+                    </p>
+                </div>
 
-<hgroup>
-    <h3>Pourquoi nous existons</h3>
-    <p>
-        Nous sommes nés de la nécessité de simplifier un processus parfois fastidieux : 
-        le montage de meubles. Notre objectif est de connecter de manière fluide ceux qui 
-        ont besoin d'aide pour assembler leurs meubles avec des professionnels ou des passionnés compétents. <br>
-        Nous croyons que la technologie peut transformer cette expérience
-        souvent stressante en quelque chose de simple, rapide et même agréable.
-    </p>
-</hgroup>
+                <!-- Fonctionnalités clés -->
+                <div class="p-6 rounded-xl border border-surface-200 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-sm">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Fonctionnalités clés</h3>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        Explorez notre application pour découvrir des fonctionnalités spécialement conçues pour simplifier le processus de mise en relation et de planification du montage de meubles. De la recherche intuitive de professionnels à la communication fluide, chaque aspect a été pensé pour répondre aux besoins de notre communauté. Rejoignez-nous et transformons ensemble la manière d’aborder le montage de meubles au quotidien.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<hgroup>
-    <h3>L'utilité de notre application</h3>
-    <p>
-        Dans un monde où les agendas sont chargés et où le temps est précieux, 
-        notre application offre une solution précieuse. Elle permet à ceux qui cherchent
-        de l'aide pour le montage de meubles de trouver rapidement des personnes qualifiées et disponibles. <br>
-        C'est une plateforme où la communauté se rassemble pour rendre le processus de montage de meubles aussi 
-        sans tracas que possible.
-    </p>
-</hgroup>
-
-
-<hgroup>
-    <h3>Fonctionnalités Clés</h3>
-    <p>
-        Explorez notre application pour découvrir des fonctionnalités spécialement conçues pour 
-        simplifier le processus de mise en relation et de planification du montage de meubles. 
-        De la recherche intuitive de professionnels à la communication fluide, chaque aspect de notre
-        application a été pensé pour répondre aux besoins uniques de notre communauté. 
-        Nous visons à rendre le montage de meubles aussi simple et efficace que possible. <br><br>
-        Nous sommes ravis de partager cette plateforme avec vous, conçue pour faciliter la vie de ceux qui recherchent une aide compétente pour le montage de meubles. Rejoignez-nous dans cette aventure et transformons ensemble la façon dont nous abordons le montage de meubles au quotidien.
-    </p>
-</hgroup>
-</hgroup>
-
-<p>
-    Rejoignez-nous dans cette communauté très chaleureuse, simplifiée par la technologie. <br>
-    Bienvenue sur Match Montage+, où vos rêves d'une vie plus simple prennent vie.
-</p>
-
+    <!-- Callout final -->
+    <section class="bg-surface-50 dark:bg-gray-900">
+        <div class="max-w-screen-xl mx-auto px-4 py-12 lg:py-16 text-center">
+            <p class="text-lg text-gray-700 dark:text-gray-300">
+                Rejoignez-nous dans cette communauté chaleureuse, simplifiée par la technologie. Bienvenue sur Match Meuble, où vos rêves d'une vie plus simple prennent vie.
+            </p>
+            <div class="mt-6">
+                <a href="{{ path('app_register') }}" class="inline-flex items-center px-6 py-3 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 rounded-lg dark:bg-primary-600 dark:hover:bg-primary-700">
+                    Créer un compte
+                </a>
+            </div>
+        </div>
+    </section>
 {% endblock %}
