@@ -3,10 +3,8 @@
 
     <!-- Main Content -->
     <main class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Estimation Form Container -->
-      <div class="">
-        <EstimationForm />
-      </div>
+      <!-- Contenu Vue principal (placeholder vide) -->
+      <div></div>
     </main>
 
     <!-- Bouton toggle dark mode en bas à droite -->
@@ -45,13 +43,9 @@
 </template>
 
 <script>
-import EstimationForm from './components/EstimationForm.vue'
-
 export default {
   name: 'App',
-  components: {
-    EstimationForm
-  },
+  components: {},
   data() {
     return {
       isDarkMode: false

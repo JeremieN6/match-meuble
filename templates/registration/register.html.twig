@@ -1,38 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Match Montage + | Inscription{% endblock %}
+{% block title %}Match Meuble | Inscription{% endblock %}
 
 {% block body %}
-<hgroup>
-    <h1>Inscription</h1>
-    <h2>Démarrez votre aventure avec Match Montage+</h2>
-</hgroup>
-
-    <div class="grid">
-       
-        <article id="article">
-            {{ form_start(registrationForm) }}
-            <h3>Mon identité</h3>
-            {{ form_row(registrationForm.nom) }}
-            {{ form_row(registrationForm.prenom) }}
-            {{ form_row(registrationForm.email) }}
-            {{ form_row(registrationForm.pseudo) }}
-            {{ form_row(registrationForm.plainPassword) }}
-            {{ form_row(registrationForm.description) }}
-        </article>
-        <article id="article">
-            <h3>Mes coordonnées</h3>
-            {{ form_row(registrationForm.adresse) }}
-            {{ form_row(registrationForm.code_postal) }}
-            {{ form_row(registrationForm.ville) }}
-            {{ form_row(registrationForm.telephone) }}
-            {{ form_row(registrationForm.ConsentementRGPD) }}
-        </article>
+<section class="bg-surface-50 dark:bg-gray-900">
+    <div class="flex flex-col items-center justify-center px-6 py-12 mx-auto md:min-h-screen">
+        <a href="{{ path('app_home') }}" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+            <span class="text-2xl italic">🛠️ MatchMeuble</span>
+        </a>
+        <div class="w-full max-w-2xl bg-white rounded-lg shadow dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-6 space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">Créer un compte</h1>
+                {% form_theme registrationForm 'form/_tailwind_theme.html.twig' %}
+                {{ form_start(registrationForm, {'attr': {'class': 'space-y-6'}}) }}
+                    <div class="grid gap-4 md:grid-cols-2">
+                        {{ form_row(registrationForm.nom) }}
+                        {{ form_row(registrationForm.prenom) }}
+                    </div>
+                    {{ form_row(registrationForm.email) }}
+                    {{ form_row(registrationForm.pseudo) }}
+                    {{ form_row(registrationForm.plainPassword) }}
+                    {{ form_row(registrationForm.description) }}
+                    <div class="grid gap-4 md:grid-cols-3">
+                        {{ form_row(registrationForm.adresse) }}
+                        {{ form_row(registrationForm.code_postal) }}
+                        {{ form_row(registrationForm.ville) }}
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        {{ form_row(registrationForm.telephone) }}
+                        {{ form_row(registrationForm.ConsentementRGPD) }}
+                    </div>
+                    <button type="submit" class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700">S'inscrire</button>
+                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">Déjà un compte ?
+                        <a href="{{ path('app_login') }}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Se connecter</a>
+                    </p>
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn">S'inscrire</button>
-    {{ form_end(registrationForm) }}
-    <a href="{{path("app_login")}}">
-        <button class="outline">Se connecter</button>
-    </a>
-
+</section>
 {% endblock %}
