@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\DemandeDeTravail;
+use App\Entity\OffreDeTravail;
 use App\Repository\DemandeDeTravailRepository;
 use App\Repository\OffreDeTravailRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +28,7 @@ class AnnoncesController extends AbstractController
                 'title' => $offre->getTitre() ?: 'Offre de montage',
                 'description' => $desc ?: 'Offre sans description fournie.',
                 'image' => 'https://images.pexels.com/photos/5582598/pexels-photo-5582598.jpeg?auto=compress&cs=tinysrgb&w=600',
-                'href' => '#',
+                'href' => $this->generateUrl('app_annonces_offre_show', ['id' => $offre->getId()]),
                 'cta' => "Voir l'offre",
                 'localisation' => $offre->getLocalisation(),
             ];
@@ -43,7 +45,7 @@ class AnnoncesController extends AbstractController
                 'title' => $demande->getTitre() ?: 'Demande de montage',
                 'description' => $desc ?: 'Demande sans description fournie.',
                 'image' => 'https://images.pexels.com/photos/4247947/pexels-photo-4247947.jpeg?auto=compress&cs=tinysrgb&w=600',
-                'href' => '#',
+                'href' => $this->generateUrl('app_annonces_demande_show', ['id' => $demande->getId()]),
                 'cta' => 'Voir la demande',
                 'localisation' => $demande->getZoneAction(),
             ];
@@ -53,6 +55,22 @@ class AnnoncesController extends AbstractController
 
         return $this->render('annonces/index.html.twig', [
             'cards' => $cards,
+        ]);
+    }
+
+    #[Route('/annonces/offre/{id}', name: 'app_annonces_offre_show', requirements: ['id' => '\\d+'])]
+    public function showOffre(OffreDeTravail $offre): Response
+    {
+        return $this->render('annonces/show_offre.html.twig', [
+            'offre' => $offre,
+        ]);
+    }
+
+    #[Route('/annonces/demande/{id}', name: 'app_annonces_demande_show', requirements: ['id' => '\\d+'])]
+    public function showDemande(DemandeDeTravail $demande): Response
+    {
+        return $this->render('annonces/show_demande.html.twig', [
+            'demande' => $demande,
         ]);
     }
 }
