@@ -14,8 +14,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
-class UsersAuthenticator extends AbstractLoginFormAuthenticator
+class UsersAuthenticator extends AbstractLoginFormAuthenticator implements AuthenticationEntryPointInterface
 {
     use TargetPathTrait;
 
@@ -54,5 +55,15 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+    }
+
+    // Called when an unauthenticated user tries to access a protected resource
+    public function start(Request $request, ?\Throwable $authException = null): Response
+    {
+        // Add a small UX message before redirecting to login
+        if ($request->hasSession()) {
+            $request->getSession()->getFlashBag()->add('warning', 'Connectez-vous pour voir le contenu de cette annonce.');
+        }
+        return new RedirectResponse($this->getLoginUrl($request));
     }
 }
