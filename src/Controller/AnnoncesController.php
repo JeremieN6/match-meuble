@@ -37,6 +37,7 @@ class AnnoncesController extends AbstractController
                 'localisation' => $offre->getLocalisation(),
                 'status' => $offre->getStatus() ? $offre->getStatus()->getNomStatus() : null,
                 'amount' => $offre->getRemuneration(),
+                'created' => $offre->getCreatedAt() ? $offre->getCreatedAt()->getTimestamp() : 0,
                 'favUrl' => $this->generateUrl('toggle_favorite_offre', ['id' => $offre->getId()]),
                 'favToken' => $this->container->get('security.csrf.token_manager')->getToken('fav_offre'.$offre->getId())->getValue(),
             ];
@@ -58,6 +59,7 @@ class AnnoncesController extends AbstractController
                 'localisation' => $demande->getZoneAction(),
                 'status' => null,
                 'amount' => $demande->getSalaire(),
+                'created' => $demande->getCreatedAt() ? $demande->getCreatedAt()->getTimestamp() : 0,
                 'favUrl' => $this->generateUrl('toggle_favorite_demande', ['id' => $demande->getId()]),
                 'favToken' => $this->container->get('security.csrf.token_manager')->getToken('fav_demande'.$demande->getId())->getValue(),
             ];

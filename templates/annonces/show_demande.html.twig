@@ -12,6 +12,19 @@
   <meta name="twitter:title" content="{{ demande.titre ?? 'Demande de montage' }}" />
   <meta name="twitter:description" content="{{ (demande.description|striptags)|u.truncate(150, '…') }}" />
   <meta name="twitter:image" content="https://images.pexels.com/photos/4247947/pexels-photo-4247947.jpeg?auto=compress&cs=tinysrgb&w=1200" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": {{ (demande.titre ?? 'Demande de montage')|json_encode|raw }},
+    "description": {{ (demande.description ?? '')|striptags|json_encode|raw }},
+    "areaServed": {{ (demande.zoneAction ?? '')|json_encode|raw }},
+    "provider": {
+      "@type": "Person",
+      "name": {{ (demande.userId ? (demande.userId.pseudo ?? (demande.userId.prenom ~ ' ' ~ demande.userId.nom)) : 'Utilisateur')|json_encode|raw }}
+    }
+  }
+  </script>
 {% endblock %}
 
 {% block body %}
@@ -75,6 +88,9 @@
               <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Posté par</p>
                 <p class="font-medium text-gray-900 dark:text-white">{{ demande.userId ? (demande.userId.pseudo ?? (demande.userId.prenom ~ ' ' ~ demande.userId.nom)) : 'Utilisateur' }}</p>
+                {% if authorAvg is not null %}
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Note: {{ authorAvg }} / 5 ({{ authorCount }})</p>
+                {% endif %}
               </div>
             </div>
           </div>

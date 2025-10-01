@@ -12,6 +12,23 @@
   <meta name="twitter:title" content="{{ offre.titre ?? 'Offre de montage' }}" />
   <meta name="twitter:description" content="{{ (offre.description|striptags)|u.truncate(150, '…') }}" />
   <meta name="twitter:image" content="https://images.pexels.com/photos/5582598/pexels-photo-5582598.jpeg?auto=compress&cs=tinysrgb&w=1200" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    "name": {{ (offre.titre ?? 'Offre de montage')|json_encode|raw }},
+    "description": {{ (offre.description ?? '')|striptags|json_encode|raw }},
+    "url": {{ app.request.uri|json_encode|raw }},
+    "price": {{ (offre.remuneration ?? 0)|json_encode|raw }},
+    "priceCurrency": "EUR",
+    "areaServed": {{ (offre.localisation ?? '')|json_encode|raw }},
+    "availability": {{ (offre.status ? offre.status.nomStatus : 'InStock')|json_encode|raw }},
+    "seller": {
+      "@type": "Person",
+      "name": {{ (offre.userId ? (offre.userId.pseudo ?? (offre.userId.prenom ~ ' ' ~ offre.userId.nom)) : 'Utilisateur')|json_encode|raw }}
+    }
+  }
+  </script>
 {% endblock %}
 
 {% block body %}
@@ -84,6 +101,9 @@
               <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Proposé par</p>
                 <p class="font-medium text-gray-900 dark:text-white">{{ offre.userId ? (offre.userId.pseudo ?? (offre.userId.prenom ~ ' ' ~ offre.userId.nom)) : 'Utilisateur' }}</p>
+                {% if authorAvg is not null %}
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Note: {{ authorAvg }} / 5 ({{ authorCount }})</p>
+                {% endif %}
               </div>
             </div>
           </div>

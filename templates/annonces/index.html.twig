@@ -23,6 +23,12 @@
           <option value="En cours">En cours</option>
           <option value="Terminée">Terminée</option>
         </select>
+        <select id="sort-by" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+          <option value="date_desc">Plus récentes</option>
+          <option value="date_asc">Plus anciennes</option>
+          <option value="amount_desc">Budget décroissant</option>
+          <option value="amount_asc">Budget croissant</option>
+        </select>
         <input id="filter-q" type="search" placeholder="Rechercher..." class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
         <button id="filter-reset" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Réinitialiser</button>
       </div>
@@ -30,7 +36,7 @@
 
     <div id="cards-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {% for card in cards %}
-      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 card-item" data-type="{{ card.type }}" data-title="{{ card.title|lower }}" data-desc="{{ card.description|lower }}" data-localisation="{{ (card.localisation ?? '')|lower }}" data-status="{{ (card.status ?? '')|lower }}">
+  <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 card-item" data-type="{{ card.type }}" data-title="{{ card.title|lower }}" data-desc="{{ card.description|lower }}" data-localisation="{{ (card.localisation ?? '')|lower }}" data-status="{{ (card.status ?? '')|lower }}" data-created="{{ card.created }}" data-amount="{{ card.amount ?? 0 }}">
         <a href="{{ card.href }}">
           <img class="rounded-t-lg w-full h-44 object-cover" src="{{ card.image }}" alt="" />
         </a>
@@ -69,6 +75,7 @@
       const typeSel = document.getElementById('filter-type');
       const statusSel = document.getElementById('filter-status');
       const qInput = document.getElementById('filter-q');
+      const sortSel = document.getElementById('sort-by');
       const resetBtn = document.getElementById('filter-reset');
       const items = Array.from(document.querySelectorAll('.card-item'));
 
@@ -84,15 +91,29 @@
           const matchesQuery = q === '' || haystack.includes(q);
           el.style.display = (matchesType && matchesStatus && matchesQuery) ? '' : 'none';
         });
+
+        const visible = items.filter(el => el.style.display !== 'none');
+        const sort = sortSel.value;
+        visible.sort((a, b) => {
+          if (sort === 'date_desc') return (parseInt(b.dataset.created) || 0) - (parseInt(a.dataset.created) || 0);
+          if (sort === 'date_asc') return (parseInt(a.dataset.created) || 0) - (parseInt(b.dataset.created) || 0);
+          if (sort === 'amount_desc') return (parseInt(b.dataset.amount) || 0) - (parseInt(a.dataset.amount) || 0);
+          if (sort === 'amount_asc') return (parseInt(a.dataset.amount) || 0) - (parseInt(b.dataset.amount) || 0);
+          return 0;
+        });
+        const grid = document.getElementById('cards-grid');
+        visible.forEach(el => grid.appendChild(el));
       }
 
       typeSel.addEventListener('change', applyFilters);
       statusSel.addEventListener('change', applyFilters);
       qInput.addEventListener('input', applyFilters);
+      sortSel.addEventListener('change', applyFilters);
       resetBtn.addEventListener('click', () => {
         typeSel.value = 'all';
         statusSel.value = 'all';
         qInput.value = '';
+        sortSel.value = 'date_desc';
         applyFilters();
       });
 
