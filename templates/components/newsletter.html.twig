@@ -1,0 +1,32 @@
+	<!-- Newsletter Section -->
+	<section class="bg-white dark:bg-gray-800">
+		<div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
+			<div class="mx-auto max-w-screen-md text-center">
+				<h2 class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl dark:text-white">
+					S'abonner à la newsletter
+				</h2>
+				<p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+					Restez au courant des progrès de la feuille de route, des annonces et des réductions exclusives, n'hésitez pas à vous inscrire avec votre email. 🙂
+				</p>
+
+				{{ form_start(formNewsletter, {'attr': {'class': 'space-y-4'}}) }}
+				<div class="flex flex-col sm:flex-row sm:space-x-3 sm:space-y-0 space-y-3">
+					<div class="flex-1">
+						{{ form_widget(formNewsletter.email, {
+                        'attr': {
+                            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500',
+                            'placeholder': 'Votre adresse email'
+                        }
+                    }) }}
+					</div>
+					{{ form_widget(formNewsletter.submit, {
+                    'attr': {
+                        'class': 'py-2.5 px-5 text-sm font-medium text-white bg-primary-700 rounded-lg border border-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
+                    }
+                }) }}
+				</div>
+				{{ form_end(formNewsletter) }}
+			</div>
+		</div>
+	</section>
+	<!-- Newsletter Section -->
