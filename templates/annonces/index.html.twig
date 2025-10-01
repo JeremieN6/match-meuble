@@ -17,6 +17,12 @@
           <option value="offre">Offres</option>
           <option value="demande">Demandes</option>
         </select>
+        <select id="filter-status" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+          <option value="all">Tous statuts</option>
+          <option value="Libre">Libre</option>
+          <option value="En cours">En cours</option>
+          <option value="Terminée">Terminée</option>
+        </select>
         <input id="filter-q" type="search" placeholder="Rechercher..." class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
         <button id="filter-reset" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Réinitialiser</button>
       </div>
@@ -24,15 +30,20 @@
 
     <div id="cards-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {% for card in cards %}
-      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 card-item" data-type="{{ card.type }}" data-title="{{ card.title|lower }}" data-desc="{{ card.description|lower }}" data-localisation="{{ (card.localisation ?? '')|lower }}">
+      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 card-item" data-type="{{ card.type }}" data-title="{{ card.title|lower }}" data-desc="{{ card.description|lower }}" data-localisation="{{ (card.localisation ?? '')|lower }}" data-status="{{ (card.status ?? '')|lower }}">
         <a href="{{ card.href }}">
           <img class="rounded-t-lg w-full h-44 object-cover" src="{{ card.image }}" alt="" />
         </a>
         <div class="p-5">
-          <a href="{{ card.href }}">
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ card.title }}</h5>
-          </a>
-          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ card.description }}</p>
+          <div class="flex items-center justify-between gap-2">
+            <a href="{{ card.href }}" class="min-w-0 flex-1">
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-1">{{ card.title }}</h5>
+            </a>
+            {% if card.type == 'offre' and card.status %}
+              <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">{{ card.status }}</span>
+            {% endif %}
+          </div>
+          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-3">{{ card.description }}</p>
           <div class="flex items-center gap-2">
             <a href="{{ card.href }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">
               {{ card.cta }}
@@ -56,26 +67,31 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const typeSel = document.getElementById('filter-type');
+      const statusSel = document.getElementById('filter-status');
       const qInput = document.getElementById('filter-q');
       const resetBtn = document.getElementById('filter-reset');
       const items = Array.from(document.querySelectorAll('.card-item'));
 
       function applyFilters() {
         const type = typeSel.value;
+        const status = statusSel.value.toLowerCase();
         const q = (qInput.value || '').trim().toLowerCase();
 
         items.forEach(el => {
           const matchesType = type === 'all' || el.dataset.type === type;
+          const matchesStatus = status === 'all' || el.dataset.status === status;
           const haystack = `${el.dataset.title} ${el.dataset.desc} ${el.dataset.localisation}`;
           const matchesQuery = q === '' || haystack.includes(q);
-          el.style.display = (matchesType && matchesQuery) ? '' : 'none';
+          el.style.display = (matchesType && matchesStatus && matchesQuery) ? '' : 'none';
         });
       }
 
       typeSel.addEventListener('change', applyFilters);
+      statusSel.addEventListener('change', applyFilters);
       qInput.addEventListener('input', applyFilters);
       resetBtn.addEventListener('click', () => {
         typeSel.value = 'all';
+        statusSel.value = 'all';
         qInput.value = '';
         applyFilters();
       });

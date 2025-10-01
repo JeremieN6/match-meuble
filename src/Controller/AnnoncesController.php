@@ -6,6 +6,7 @@ use App\Entity\DemandeDeTravail;
 use App\Entity\OffreDeTravail;
 use App\Repository\DemandeDeTravailRepository;
 use App\Repository\OffreDeTravailRepository;
+use App\Repository\EvaluationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +35,8 @@ class AnnoncesController extends AbstractController
                 'href' => $this->generateUrl('app_annonces_offre_show', ['id' => $offre->getId(), 'slug' => $offre->getSlug() ?: $this->slugify($offre->getTitre() ?? 'offre')]),
                 'cta' => "Voir l'offre",
                 'localisation' => $offre->getLocalisation(),
+                'status' => $offre->getStatus() ? $offre->getStatus()->getNomStatus() : null,
+                'amount' => $offre->getRemuneration(),
                 'favUrl' => $this->generateUrl('toggle_favorite_offre', ['id' => $offre->getId()]),
                 'favToken' => $this->container->get('security.csrf.token_manager')->getToken('fav_offre'.$offre->getId())->getValue(),
             ];
@@ -53,6 +56,8 @@ class AnnoncesController extends AbstractController
                 'href' => $this->generateUrl('app_annonces_demande_show', ['id' => $demande->getId(), 'slug' => $demande->getSlug() ?: $this->slugify($demande->getTitre() ?? 'demande')]),
                 'cta' => 'Voir la demande',
                 'localisation' => $demande->getZoneAction(),
+                'status' => null,
+                'amount' => $demande->getSalaire(),
                 'favUrl' => $this->generateUrl('toggle_favorite_demande', ['id' => $demande->getId()]),
                 'favToken' => $this->container->get('security.csrf.token_manager')->getToken('fav_demande'.$demande->getId())->getValue(),
             ];
@@ -67,13 +72,24 @@ class AnnoncesController extends AbstractController
     }
 
     #[Route('/annonces/offre/{id}-{slug}', name: 'app_annonces_offre_show', requirements: ['id' => '\\d+'])]
-    public function showOffre(OffreDeTravail $offre, string $slug, OffreDeTravailRepository $offreRepo): Response
+    public function showOffre(OffreDeTravail $offre, string $slug, OffreDeTravailRepository $offreRepo, EvaluationRepository $evalRepo): Response
     {
         $canonical = $offre->getSlug() ?: $this->slugify($offre->getTitre() ?? 'offre');
         if ($slug !== $canonical) {
             return $this->redirectToRoute('app_annonces_offre_show', ['id' => $offre->getId(), 'slug' => $canonical], 301);
         }
-        // Similar offers by localisation
+        // Author rating
+        $author = $offre->getUserId();
+        $authorAvg = null; $authorCount = 0;
+        if ($author) {
+            $ratings = $evalRepo->findBy(['userIdCible' => $author]);
+            $authorCount = count($ratings);
+            if ($authorCount > 0) {
+                $sum = 0; foreach ($ratings as $r) { $sum += (int)($r->getNote() ?? 0); }
+                $authorAvg = round($sum / $authorCount, 1);
+            }
+        }
+        // Similar offers
         $similars = [];
         $cands = $offreRepo->findBy(['localisation' => $offre->getLocalisation()], ['createdAt' => 'DESC'], 6);
         foreach ($cands as $cand) {
@@ -106,16 +122,30 @@ class AnnoncesController extends AbstractController
         return $this->render('annonces/show_offre.html.twig', [
             'offre' => $offre,
             'similars' => $similars,
+            'authorAvg' => $authorAvg,
+            'authorCount' => $authorCount,
         ]);
     }
 
     #[Route('/annonces/demande/{id}-{slug}', name: 'app_annonces_demande_show', requirements: ['id' => '\\d+'])]
-    public function showDemande(DemandeDeTravail $demande, string $slug, DemandeDeTravailRepository $demandeRepo): Response
+    public function showDemande(DemandeDeTravail $demande, string $slug, DemandeDeTravailRepository $demandeRepo, EvaluationRepository $evalRepo): Response
     {
         $canonical = $demande->getSlug() ?: $this->slugify($demande->getTitre() ?? 'demande');
         if ($slug !== $canonical) {
             return $this->redirectToRoute('app_annonces_demande_show', ['id' => $demande->getId(), 'slug' => $canonical], 301);
         }
+        // Author rating
+        $author = $demande->getUserId();
+        $authorAvg = null; $authorCount = 0;
+        if ($author) {
+            $ratings = $evalRepo->findBy(['userIdCible' => $author]);
+            $authorCount = count($ratings);
+            if ($authorCount > 0) {
+                $sum = 0; foreach ($ratings as $r) { $sum += (int)($r->getNote() ?? 0); }
+                $authorAvg = round($sum / $authorCount, 1);
+            }
+        }
+        // Similar demandes
         $similars = [];
         $cands = $demandeRepo->findBy(['zoneAction' => $demande->getZoneAction()], ['createdAt' => 'DESC'], 6);
         foreach ($cands as $cand) {
@@ -148,6 +178,8 @@ class AnnoncesController extends AbstractController
         return $this->render('annonces/show_demande.html.twig', [
             'demande' => $demande,
             'similars' => $similars,
+            'authorAvg' => $authorAvg,
+            'authorCount' => $authorCount,
         ]);
     }
 

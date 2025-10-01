@@ -8,6 +8,10 @@
   <meta property="og:description" content="{{ (demande.description|striptags)|u.truncate(150, '…') }}" />
   <meta property="og:url" content="{{ app.request.uri }}" />
   <meta property="og:image" content="https://images.pexels.com/photos/4247947/pexels-photo-4247947.jpeg?auto=compress&cs=tinysrgb&w=1200" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ demande.titre ?? 'Demande de montage' }}" />
+  <meta name="twitter:description" content="{{ (demande.description|striptags)|u.truncate(150, '…') }}" />
+  <meta name="twitter:image" content="https://images.pexels.com/photos/4247947/pexels-photo-4247947.jpeg?auto=compress&cs=tinysrgb&w=1200" />
 {% endblock %}
 
 {% block body %}
@@ -78,7 +82,16 @@
           <div class="mt-6 flex flex-wrap gap-3">
             <button data-modal-target="contact-modal" data-modal-toggle="contact-modal" type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Contacter</button>
             <button id="fav-demande-btn" type="button" data-url="{{ path('toggle_favorite_demande', {id: demande.id}) }}" data-csrf="{{ csrf_token('fav_demande' ~ demande.id) }}" class="px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 dark:text-primary-300 dark:bg-primary-900/20 dark:border-primary-900">Enregistrer</button>
-            <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-700">Partager</button>
+
+            <button id="shareDropdownButtonDemande" data-dropdown-toggle="shareDropdownDemande" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-700" type="button">Partager</button>
+            <div id="shareDropdownDemande" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
+              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="shareDropdownButtonDemande">
+                <li><a href="#" id="copyLinkDemande" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Copier le lien</a></li>
+                <li><a target="_blank" href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&text={{ (demande.titre ?? 'Demande de montage')|url_encode }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Twitter</a></li>
+                <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri|url_encode }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Facebook</a></li>
+                <li><a target="_blank" href="https://api.whatsapp.com/send?text={{ (demande.titre ?? 'Demande de montage')|url_encode }}%20{{ app.request.uri|url_encode }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">WhatsApp</a></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -181,6 +194,14 @@
             const closeBtn = document.querySelector('[data-modal-hide="contact-modal"]');
             if (closeBtn) closeBtn.click();
           }
+        });
+      }
+
+      const copy = document.getElementById('copyLinkDemande');
+      if (copy) {
+        copy.addEventListener('click', (e) => {
+          e.preventDefault();
+          navigator.clipboard?.writeText(window.location.href);
         });
       }
     });
