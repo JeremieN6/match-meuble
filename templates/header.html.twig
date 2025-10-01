@@ -37,8 +37,19 @@
         </div>
 
         <!-- Boutons CTA Desktop -->
-        <div class="hidden md:flex items-center space-x-3">
+                <div class="hidden md:flex items-center space-x-3">
             {% if app.user %}
+                        <div class="relative">
+                            <button id="notifDropdownButton" data-dropdown-toggle="notifDropdown" class="relative px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700">
+                                🔔
+                                {# Optional badge could be rendered server-side if a global var with unread count is provided #}
+                            </button>
+                            <div id="notifDropdown" class="z-20 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-80 dark:bg-gray-700">
+                                <div class="max-h-80 overflow-auto" id="notifList">
+                                    <div class="p-3 text-sm text-gray-500 dark:text-gray-400">Chargement...</div>
+                                </div>
+                            </div>
+                        </div>
             <a href="#"
                 class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
                 Mon compte
@@ -155,5 +166,32 @@
                 mobileMenu.classList.toggle('hidden');
             });
         }
+    });
+</script>
+<script>
+    // Lightweight fetch of notifications when opening the dropdown
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('notifDropdownButton');
+        const list = document.getElementById('notifList');
+        if (!btn || !list) return;
+        btn.addEventListener('click', async () => {
+            try {
+                const res = await fetch('{{ path('app_notifications') }}', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                const data = await res.json();
+                list.innerHTML = '';
+                if (!data || data.length === 0) {
+                    list.innerHTML = '<div class="p-3 text-sm text-gray-500 dark:text-gray-400">Aucune notification</div>';
+                } else {
+                    data.forEach(n => {
+                        const el = document.createElement('div');
+                        el.className = 'p-3 text-sm text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-gray-600';
+                        el.textContent = n.message;
+                        list.appendChild(el);
+                    });
+                }
+            } catch (e) {
+                list.innerHTML = '<div class="p-3 text-sm text-red-600">Erreur de chargement</div>';
+            }
+        });
     });
 </script>

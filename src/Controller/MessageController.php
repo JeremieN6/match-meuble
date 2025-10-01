@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Message;
 use App\Entity\OffreDeTravail;
 use App\Entity\DemandeDeTravail;
+use App\Entity\Notification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,7 +36,14 @@ class MessageController extends AbstractController
         $message->setDateEnvoi(new \DateTime());
 
         $em->persist($message);
-        $em->flush();
+    // Create in-app notification for recipient
+    $notif = new Notification();
+    $notif->setUserId($dest);
+    $notif->setMessageNotif('Nouveau message concernant une offre: '.mb_substr($msgText, 0, 120));
+    $notif->setDateNotification(new \DateTime());
+    $notif->setLu(false);
+    $em->persist($notif);
+    $em->flush();
         return $this->json(['ok' => true]);
     }
 
@@ -61,7 +69,14 @@ class MessageController extends AbstractController
         $message->setDateEnvoi(new \DateTime());
 
         $em->persist($message);
-        $em->flush();
+    // Create in-app notification for recipient
+    $notif = new Notification();
+    $notif->setUserId($dest);
+    $notif->setMessageNotif('Nouveau message concernant une demande: '.mb_substr($msgText, 0, 120));
+    $notif->setDateNotification(new \DateTime());
+    $notif->setLu(false);
+    $em->persist($notif);
+    $em->flush();
         return $this->json(['ok' => true]);
     }
 }

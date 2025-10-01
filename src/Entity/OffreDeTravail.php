@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\OffreDeTravailRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: OffreDeTravailRepository::class)]
 class OffreDeTravail
@@ -50,9 +52,17 @@ class OffreDeTravail
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
+    #[ORM\OneToMany(mappedBy: 'offre', targetEntity: AnnonceImage::class, orphanRemoval: false)]
+    private Collection $images;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
     }
 
     public function getUserId(): ?Users
@@ -198,4 +208,7 @@ class OffreDeTravail
 
         return $this;
     }
+
+    /** @return Collection<int, AnnonceImage> */
+    public function getImages(): Collection { return $this->images; }
 }

@@ -19,10 +19,43 @@ class AnnoncesController extends AbstractController
     public function index(
         OffreDeTravailRepository $offres,
         DemandeDeTravailRepository $demandes,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Request $request
     ): Response {
+        $page = max(1, (int)$request->query->get('page', 1));
+        $perPage = min(30, max(6, (int)$request->query->get('perPage', 12)));
+        $offset = ($page - 1) * $perPage;
+
+        $q = trim((string)$request->query->get('q', ''));
+        $min = $request->query->has('min') ? (int)$request->query->get('min') : null;
+        $max = $request->query->has('max') ? (int)$request->query->get('max') : null;
+        $status = $request->query->get('status');
+        $type = $request->query->get('type'); // 'offre' | 'demande' | null
+
+        // Simple query builders for perf (no full-text yet)
+        $ob = $offres->createQueryBuilder('o')->orderBy('o.createdAt', 'DESC');
+        if ($min !== null) { $ob->andWhere('o.remuneration >= :omin')->setParameter('omin', $min); }
+        if ($max !== null) { $ob->andWhere('o.remuneration <= :omax')->setParameter('omax', $max); }
+        if ($status) { $ob->join('o.status', 's')->andWhere('s.nomStatus = :st')->setParameter('st', $status); }
+        if ($q !== '') {
+            $ob->andWhere('LOWER(o.titre) LIKE :q OR LOWER(o.description) LIKE :q OR LOWER(o.localisation) LIKE :q')
+               ->setParameter('q', '%'.mb_strtolower($q).'%');
+        }
+        $ob->setFirstResult($offset)->setMaxResults($perPage);
+        $allOffres = ($type === 'demande') ? [] : $ob->getQuery()->getResult();
+
+        $db = $demandes->createQueryBuilder('d')->orderBy('d.createdAt', 'DESC');
+        if ($min !== null) { $db->andWhere('d.salaire >= :dmin')->setParameter('dmin', $min); }
+        if ($max !== null) { $db->andWhere('d.salaire <= :dmax')->setParameter('dmax', $max); }
+        if ($q !== '') {
+            $db->andWhere('LOWER(d.titre) LIKE :qd OR LOWER(d.description) LIKE :qd OR LOWER(d.zoneAction) LIKE :qd')
+               ->setParameter('qd', '%'.mb_strtolower($q).'%');
+        }
+        $db->setFirstResult($offset)->setMaxResults($perPage);
+        $allDemandes = ($type === 'offre') ? [] : $db->getQuery()->getResult();
+
         $offreCards = [];
-        foreach ($offres->findAll() as $offre) {
+        foreach ($allOffres as $offre) {
             if (!$offre->getSlug() && $offre->getTitre()) { $offre->setSlug($this->slugify($offre->getTitre())); $em->persist($offre); }
             $desc = $offre->getDescription() ?: '';
             if (mb_strlen($desc) > 160) { $desc = mb_substr($desc, 0, 157) . '…'; }
@@ -43,8 +76,8 @@ class AnnoncesController extends AbstractController
             ];
         }
 
-        $demandeCards = [];
-        foreach ($demandes->findAll() as $demande) {
+    $demandeCards = [];
+    foreach ($allDemandes as $demande) {
             if (!$demande->getSlug() && $demande->getTitre()) { $demande->setSlug($this->slugify($demande->getTitre())); $em->persist($demande); }
             $desc = $demande->getDescription() ?: '';
             if (mb_strlen($desc) > 160) { $desc = mb_substr($desc, 0, 157) . '…'; }
@@ -67,9 +100,14 @@ class AnnoncesController extends AbstractController
 
         $em->flush();
         $cards = array_merge($offreCards, $demandeCards);
+        $hasMore = count($allOffres) === $perPage || count($allDemandes) === $perPage;
 
         return $this->render('annonces/index.html.twig', [
             'cards' => $cards,
+            'page' => $page,
+            'perPage' => $perPage,
+            'hasMore' => $hasMore,
+            'filters' => [ 'q' => $q, 'min' => $min, 'max' => $max, 'status' => $status, 'type' => $type ],
         ]);
     }
 

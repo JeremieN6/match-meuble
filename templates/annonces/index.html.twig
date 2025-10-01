@@ -13,15 +13,15 @@
       <!-- Filtres -->
       <div class="flex flex-wrap items-center gap-3">
         <select id="filter-type" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-          <option value="all">Tous les types</option>
-          <option value="offre">Offres</option>
-          <option value="demande">Demandes</option>
+          <option value="all" {{ filters.type is empty or filters.type == 'all' ? 'selected' : '' }}>Tous les types</option>
+          <option value="offre" {{ filters.type == 'offre' ? 'selected' : '' }}>Offres</option>
+          <option value="demande" {{ filters.type == 'demande' ? 'selected' : '' }}>Demandes</option>
         </select>
         <select id="filter-status" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-          <option value="all">Tous statuts</option>
-          <option value="Libre">Libre</option>
-          <option value="En cours">En cours</option>
-          <option value="Terminée">Terminée</option>
+          <option value="all" {{ filters.status is empty ? 'selected' : '' }}>Tous statuts</option>
+          <option value="Libre" {{ filters.status == 'Libre' ? 'selected' : '' }}>Libre</option>
+          <option value="En cours" {{ filters.status == 'En cours' ? 'selected' : '' }}>En cours</option>
+          <option value="Terminée" {{ filters.status == 'Terminée' ? 'selected' : '' }}>Terminée</option>
         </select>
         <select id="sort-by" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
           <option value="date_desc">Plus récentes</option>
@@ -29,7 +29,9 @@
           <option value="amount_desc">Budget décroissant</option>
           <option value="amount_asc">Budget croissant</option>
         </select>
-        <input id="filter-q" type="search" placeholder="Rechercher..." class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
+        <input id="filter-q" value="{{ filters.q }}" type="search" placeholder="Rechercher..." class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
+        <input id="filter-min" value="{{ filters.min ?? '' }}" type="number" min="0" placeholder="Prix min" class="w-28 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
+        <input id="filter-max" value="{{ filters.max ?? '' }}" type="number" min="0" placeholder="Prix max" class="w-28 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
         <button id="filter-reset" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Réinitialiser</button>
       </div>
     </div>
@@ -72,9 +74,11 @@
   {{ parent() }}
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const typeSel = document.getElementById('filter-type');
-      const statusSel = document.getElementById('filter-status');
-      const qInput = document.getElementById('filter-q');
+  const typeSel = document.getElementById('filter-type');
+  const statusSel = document.getElementById('filter-status');
+  const qInput = document.getElementById('filter-q');
+  const minInput = document.getElementById('filter-min');
+  const maxInput = document.getElementById('filter-max');
       const sortSel = document.getElementById('sort-by');
       const resetBtn = document.getElementById('filter-reset');
       const items = Array.from(document.querySelectorAll('.card-item'));
@@ -83,13 +87,18 @@
         const type = typeSel.value;
         const status = statusSel.value.toLowerCase();
         const q = (qInput.value || '').trim().toLowerCase();
+        const min = parseInt(minInput.value || '');
+        const max = parseInt(maxInput.value || '');
 
         items.forEach(el => {
           const matchesType = type === 'all' || el.dataset.type === type;
           const matchesStatus = status === 'all' || el.dataset.status === status;
           const haystack = `${el.dataset.title} ${el.dataset.desc} ${el.dataset.localisation}`;
           const matchesQuery = q === '' || haystack.includes(q);
-          el.style.display = (matchesType && matchesStatus && matchesQuery) ? '' : 'none';
+          const amount = parseInt(el.dataset.amount || '0');
+          const matchesMin = isNaN(min) || amount >= min;
+          const matchesMax = isNaN(max) || amount <= max;
+          el.style.display = (matchesType && matchesStatus && matchesQuery && matchesMin && matchesMax) ? '' : 'none';
         });
 
         const visible = items.filter(el => el.style.display !== 'none');
@@ -108,11 +117,15 @@
       typeSel.addEventListener('change', applyFilters);
       statusSel.addEventListener('change', applyFilters);
       qInput.addEventListener('input', applyFilters);
+      minInput.addEventListener('input', applyFilters);
+      maxInput.addEventListener('input', applyFilters);
       sortSel.addEventListener('change', applyFilters);
       resetBtn.addEventListener('click', () => {
         typeSel.value = 'all';
         statusSel.value = 'all';
         qInput.value = '';
+        minInput.value = '';
+        maxInput.value = '';
         sortSel.value = 'date_desc';
         applyFilters();
       });
@@ -131,5 +144,31 @@
       });
     });
   </script>
+  <script>
+    // Pagination controls (minimal)
+    document.addEventListener('DOMContentLoaded', () => {
+      const pag = document.getElementById('pagination-controls');
+      if (!pag) return;
+      pag.addEventListener('click', (e) => {
+        const target = e.target.closest('a[data-page]');
+        if (!target) return;
+        e.preventDefault();
+        const page = target.getAttribute('data-page');
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', page);
+        window.location.search = params.toString();
+      });
+    });
+  </script>
 {% endblock %}
 {% endblock %}
+
+<div id="pagination-controls" class="max-w-screen-xl mx-auto px-4 pb-10 flex items-center justify-center gap-4">
+  {% if page > 1 %}
+    <a href="#" data-page="{{ page - 1 }}" class="px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-700">Précédent</a>
+  {% endif %}
+  <span class="text-sm text-gray-600 dark:text-gray-400">Page {{ page }}</span>
+  {% if hasMore %}
+    <a href="#" data-page="{{ page + 1 }}" class="px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-700">Suivant</a>
+  {% endif %}
+</div>

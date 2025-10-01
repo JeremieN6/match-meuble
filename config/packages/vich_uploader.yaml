@@ -3,10 +3,17 @@ vich_uploader:
     storage: flysystem
 
     mappings:
-       featured_profils:
+        featured_profils:
             uri_prefix: '%aws_s3_base_url%/upload/profil/images'
             namer: Vich\UploaderBundle\Naming\UniqidNamer
             upload_destination: aws.storage
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
+        annonce_images:
+            uri_prefix: '%aws_s3_base_url%/upload/annonces/images'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            upload_destination: aws.annonces.storage
             inject_on_load: false
             delete_on_update: true
             delete_on_remove: true
