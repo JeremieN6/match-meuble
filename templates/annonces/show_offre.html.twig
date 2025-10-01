@@ -66,11 +66,20 @@
               {% for img in offre.images %}
               <div class="duration-700 ease-in-out" data-carousel-item="{{ loop.first ? 'active' : '' }}">
                 <img src="{{ vich_uploader_asset(img, 'imageFile') }}" class="absolute block w-full h-full object-cover top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" alt="Image annonce">
+                {% if app.user and offre.userId and app.user.id == offre.userId.id %}
+                <button type="button" data-del-id="{{ img.id }}" data-del-csrf="{{ csrf_token('del_img' ~ img.id) }}" class="absolute top-2 right-2 bg-white/80 hover:bg-white text-red-600 rounded-full p-2 shadow">
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 7h12M9 7v10m6-10v10M4 7h16l-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 7zm5-3h6a1 1 0 0 1 1 1v2H8V5a1 1 0 0 1 1-1z"/></svg>
+                </button>
+                {% endif %}
               </div>
               {% endfor %}
+              <button type="button" id="prevSlide" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2">‹</button>
+              <button type="button" id="nextSlide" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2">›</button>
             </div>
-            <div class="flex justify-center items-center pt-4">
-              <button type="button" class="mx-1 w-3 h-3 rounded-full bg-gray-300" data-carousel-slide-to="0"></button>
+            <div class="flex justify-center items-center pt-4 gap-2">
+              {% for img in offre.images %}
+                <button type="button" class="w-2.5 h-2.5 rounded-full bg-gray-300" data-carousel-slide-to="{{ loop.index0 }}"></button>
+              {% endfor %}
             </div>
           </div>
           {% endif %}
@@ -81,6 +90,15 @@
               {{ form_row(uploadForm.imageFile) }}
               <button class="mt-2 inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800">Uploader</button>
             {{ form_end(uploadForm) }}
+            {% if multiForm is defined and multiForm %}
+              <div class="mt-4">
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Multi-upload (optionnel)</h4>
+                {{ form_start(multiForm, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                  {{ form_row(multiForm.images) }}
+                  <button class="mt-2 inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800">Uploader plusieurs</button>
+                {{ form_end(multiForm) }}
+              </div>
+            {% endif %}
           </div>
           {% endif %}
           <div class="flex items-start justify-between gap-4">
@@ -256,6 +274,35 @@
           navigator.clipboard?.writeText(window.location.href);
         });
       }
+
+      // Carousel basic JS
+      const items = Array.from(document.querySelectorAll('[data-carousel-item]'));
+      let active = Math.max(0, items.findIndex(i => i.getAttribute('data-carousel-item') === 'active'));
+      function show(idx){
+        items.forEach((el,i)=>{
+          el.classList.toggle('hidden', i!==idx);
+          el.setAttribute('data-carousel-item', i===idx ? 'active' : '');
+        });
+      }
+      show(active);
+      document.getElementById('prevSlide')?.addEventListener('click', ()=>{ active = (active - 1 + items.length) % items.length; show(active); });
+      document.getElementById('nextSlide')?.addEventListener('click', ()=>{ active = (active + 1) % items.length; show(active); });
+      document.querySelectorAll('[data-carousel-slide-to]').forEach(dot=>{
+        dot.addEventListener('click', ()=>{ const i = parseInt(dot.getAttribute('data-carousel-slide-to')); if(!isNaN(i)) { active = i; show(active); }});
+      });
+
+      // Delete image
+      document.querySelectorAll('[data-del-id]')?.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-del-id');
+          const csrf = btn.getAttribute('data-del-csrf');
+          const res = await fetch('{{ path('app_annonce_delete_image', {id: 0}) }}'.replace('/0','/'+id), { method: 'DELETE', headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf } });
+          if (res.ok) {
+            const slide = btn.closest('[data-carousel-item]');
+            slide?.remove();
+          }
+        });
+      });
     });
   </script>
 </section>

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AnnonceImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: AnnonceImageRepository::class)]
@@ -23,6 +24,12 @@ class AnnonceImage
     private ?DemandeDeTravail $demande = null;
 
     #[Vich\UploadableField(mapping: 'annonce_images', fileNameProperty: 'imageName')]
+    #[Assert\Image(
+        maxSize: '5M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+        mimeTypesMessage: 'Formats acceptés: JPEG, PNG, WEBP, GIF',
+        maxSizeMessage: 'Taille maximale 5 Mo'
+    )]
     private ?File $imageFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]

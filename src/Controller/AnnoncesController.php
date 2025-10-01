@@ -9,6 +9,7 @@ use App\Repository\OffreDeTravailRepository;
 use App\Repository\EvaluationRepository;
 use App\Entity\AnnonceImage;
 use App\Form\AnnonceImageType;
+use App\Form\AnnonceImagesType;
 use Knp\Component\Pager\PaginatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -184,11 +185,12 @@ class AnnoncesController extends AbstractController
                 if (count($similars) >= 4) break;
             }
         }
-        $uploadForm = null;
+        $uploadForm = null; $multiForm = null;
         if ($this->getUser() && $offre->getUserId() && $offre->getUserId()->getId() === $this->getUser()->getId()) {
             $img = new AnnonceImage();
             $img->setOffre($offre);
             $uploadForm = $this->createForm(AnnonceImageType::class, $img, [ 'action' => $this->generateUrl('app_offre_upload_image', ['id' => $offre->getId()]) ]);
+            $multiForm = $this->createForm(AnnonceImagesType::class, null, [ 'action' => $this->generateUrl('app_offre_upload_images', ['id' => $offre->getId()]) ]);
         }
 
         return $this->render('annonces/show_offre.html.twig', [
@@ -197,6 +199,7 @@ class AnnoncesController extends AbstractController
             'authorAvg' => $authorAvg,
             'authorCount' => $authorCount,
             'uploadForm' => $uploadForm?->createView(),
+            'multiForm' => $multiForm?->createView(),
         ]);
     }
 
@@ -248,11 +251,12 @@ class AnnoncesController extends AbstractController
                 if (count($similars) >= 4) break;
             }
         }
-        $uploadForm = null;
+        $uploadForm = null; $multiForm = null;
         if ($this->getUser() && $demande->getUserId() && $demande->getUserId()->getId() === $this->getUser()->getId()) {
             $img = new AnnonceImage();
             $img->setDemande($demande);
             $uploadForm = $this->createForm(AnnonceImageType::class, $img, [ 'action' => $this->generateUrl('app_demande_upload_image', ['id' => $demande->getId()]) ]);
+            $multiForm = $this->createForm(AnnonceImagesType::class, null, [ 'action' => $this->generateUrl('app_demande_upload_images', ['id' => $demande->getId()]) ]);
         }
 
         return $this->render('annonces/show_demande.html.twig', [
@@ -261,6 +265,7 @@ class AnnoncesController extends AbstractController
             'authorAvg' => $authorAvg,
             'authorCount' => $authorCount,
             'uploadForm' => $uploadForm?->createView(),
+            'multiForm' => $multiForm?->createView(),
         ]);
     }
 
@@ -294,6 +299,61 @@ class AnnoncesController extends AbstractController
             $em->flush();
         }
         return $this->redirectToRoute('app_annonces_demande_show', ['id' => $demande->getId(), 'slug' => $demande->getSlug() ?: 'demande']);
+    }
+
+    #[Route('/annonces/offre/{id}/uploads', name: 'app_offre_upload_images', methods: ['POST'])]
+    public function uploadOffreImages(OffreDeTravail $offre, Request $request, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        if (!$offre->getUserId() || $offre->getUserId()->getId() !== $this->getUser()->getId()) { throw $this->createAccessDeniedException(); }
+        $form = $this->createForm(AnnonceImagesType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $files = $form->get('images')->getData() ?? [];
+            foreach ($files as $file) {
+                $img = new AnnonceImage();
+                $img->setOffre($offre);
+                $img->setImageFile($file);
+                $em->persist($img);
+            }
+            $em->flush();
+        }
+        return $this->redirectToRoute('app_annonces_offre_show', ['id' => $offre->getId(), 'slug' => $offre->getSlug() ?: 'offre']);
+    }
+
+    #[Route('/annonces/demande/{id}/uploads', name: 'app_demande_upload_images', methods: ['POST'])]
+    public function uploadDemandeImages(DemandeDeTravail $demande, Request $request, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        if (!$demande->getUserId() || $demande->getUserId()->getId() !== $this->getUser()->getId()) { throw $this->createAccessDeniedException(); }
+        $form = $this->createForm(AnnonceImagesType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $files = $form->get('images')->getData() ?? [];
+            foreach ($files as $file) {
+                $img = new AnnonceImage();
+                $img->setDemande($demande);
+                $img->setImageFile($file);
+                $em->persist($img);
+            }
+            $em->flush();
+        }
+        return $this->redirectToRoute('app_annonces_demande_show', ['id' => $demande->getId(), 'slug' => $demande->getSlug() ?: 'demande']);
+    }
+
+    #[Route('/annonces/image/{id}', name: 'app_annonce_delete_image', methods: ['DELETE'])]
+    public function deleteImage(AnnonceImage $image, Request $request, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $ownerId = $image->getOffre()?->getUserId()?->getId() ?? $image->getDemande()?->getUserId()?->getId();
+        if ($ownerId !== $this->getUser()->getId()) { throw $this->createAccessDeniedException(); }
+        $submittedToken = $request->headers->get('X-CSRF-TOKEN');
+        if (!$this->isCsrfTokenValid('del_img'.$image->getId(), $submittedToken)) {
+            return $this->json(['error' => 'Invalid CSRF'], 400);
+        }
+        $em->remove($image);
+        $em->flush();
+        return $this->json(['ok' => true]);
     }
 
     private function slugify(string $text): string
