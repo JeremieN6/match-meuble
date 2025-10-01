@@ -163,12 +163,18 @@
 {% endblock %}
 {% endblock %}
 
-<div id="pagination-controls" class="max-w-screen-xl mx-auto px-4 pb-10 flex items-center justify-center gap-4">
-  {% if page > 1 %}
-    <a href="#" data-page="{{ page - 1 }}" class="px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-700">Précédent</a>
-  {% endif %}
-  <span class="text-sm text-gray-600 dark:text-gray-400">Page {{ page }}</span>
-  {% if hasMore %}
-    <a href="#" data-page="{{ page + 1 }}" class="px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-700">Suivant</a>
-  {% endif %}
-</div>
+{% if pagination %}
+  <div class="max-w-screen-xl mx-auto px-4 pb-10">
+    {{ knp_pagination_render(pagination) }}
+  </div>
+{% else %}
+  <div id="pagination-controls" class="max-w-screen-xl mx-auto px-4 pb-10 flex items-center justify-center gap-4">
+    {% if page > 1 %}
+      <a href="#" data-page="{{ page - 1 }}" class="px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-700">Précédent</a>
+    {% endif %}
+    <span class="text-sm text-gray-600 dark:text-gray-400">Page {{ page }}</span>
+    {% if hasMore %}
+      <a href="#" data-page="{{ page + 1 }}" class="px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-700">Suivant</a>
+    {% endif %}
+  </div>
+{% endif %}
