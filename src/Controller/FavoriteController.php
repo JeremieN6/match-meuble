@@ -58,4 +58,18 @@ class FavoriteController extends AbstractController
         $em->flush();
         return $this->json(['favori' => true]);
     }
+
+    #[Route('/mes-favoris', name: 'app_favorites', methods: ['GET'])]
+    public function list(FavoriteOffreRepository $favOffres, FavoriteDemandeRepository $favDemandes): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $user = $this->getUser();
+        $offres = $favOffres->findBy(['user' => $user], ['createdAt' => 'DESC']);
+        $demandes = $favDemandes->findBy(['user' => $user], ['createdAt' => 'DESC']);
+
+        return $this->render('userAccount/favoris.html.twig', [
+            'favOffres' => $offres,
+            'favDemandes' => $demandes,
+        ]);
+    }
 }

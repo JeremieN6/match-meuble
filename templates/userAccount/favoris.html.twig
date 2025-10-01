@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes favoris | MatchMeuble{% endblock %}
+
+{% block body %}
+<section class="bg-surface-50 dark:bg-gray-900 py-10 lg:py-14">
+  <div class="max-w-screen-xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mes favoris</h1>
+      <a href="{{ path('app_annonces') }}" class="text-sm text-primary-700 hover:underline dark:text-primary-400">Retour aux annonces</a>
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-2">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Offres enregistrées</h2>
+        <div class="grid gap-4">
+          {% for f in favOffres %}
+          <div class="flex gap-4 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <img class="w-24 h-24 rounded object-cover" src="https://images.pexels.com/photos/5582598/pexels-photo-5582598.jpeg?auto=compress&cs=tinysrgb&w=300" alt="">
+            <div class="flex-1">
+              <a href="{{ path('app_annonces_offre_show', {id: f.offre.id, slug: f.offre.slug ?? 'offre'}) }}" class="font-semibold text-gray-900 dark:text-white">{{ f.offre.titre ?? 'Offre' }}</a>
+              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{{ f.offre.description }}</p>
+            </div>
+            <form method="post" action="{{ path('toggle_favorite_offre', {id: f.offre.id}) }}" class="self-start">
+              <input type="hidden" name="_token" value="{{ csrf_token('fav_offre' ~ f.offre.id) }}">
+              <button class="text-sm px-3 py-2 border rounded-lg text-red-700 border-red-200 bg-red-50 hover:bg-red-100 dark:text-red-300 dark:border-red-900 dark:bg-red-900/20">Retirer</button>
+            </form>
+          </div>
+          {% else %}
+            <p class="text-sm text-gray-500 dark:text-gray-400">Aucune offre enregistrée.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Demandes enregistrées</h2>
+        <div class="grid gap-4">
+          {% for f in favDemandes %}
+          <div class="flex gap-4 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <img class="w-24 h-24 rounded object-cover" src="https://images.pexels.com/photos/4247947/pexels-photo-4247947.jpeg?auto=compress&cs=tinysrgb&w=300" alt="">
+            <div class="flex-1">
+              <a href="{{ path('app_annonces_demande_show', {id: f.demande.id, slug: f.demande.slug ?? 'demande'}) }}" class="font-semibold text-gray-900 dark:text-white">{{ f.demande.titre ?? 'Demande' }}</a>
+              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{{ f.demande.description }}</p>
+            </div>
+            <form method="post" action="{{ path('toggle_favorite_demande', {id: f.demande.id}) }}" class="self-start">
+              <input type="hidden" name="_token" value="{{ csrf_token('fav_demande' ~ f.demande.id) }}">
+              <button class="text-sm px-3 py-2 border rounded-lg text-red-700 border-red-200 bg-red-50 hover:bg-red-100 dark:text-red-300 dark:border-red-900 dark:bg-red-900/20">Retirer</button>
+            </form>
+          </div>
+          {% else %}
+            <p class="text-sm text-gray-500 dark:text-gray-400">Aucune demande enregistrée.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

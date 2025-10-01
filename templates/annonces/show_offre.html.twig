@@ -2,6 +2,7 @@
 
 {% block title %}MatchMeuble | Offre - {{ offre.titre ?? 'Offre de montage' }}{% endblock %}
 {% block meta %}
+  <link rel="canonical" href="{{ app.request.uri }}" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="{{ offre.titre ?? 'Offre de montage' }}" />
   <meta property="og:description" content="{{ (offre.description|striptags)|u.truncate(150, '…') }}" />
@@ -12,7 +13,6 @@
 {% block body %}
 <section class="bg-surface-50 dark:bg-gray-900 py-10 lg:py-14">
   <div class="max-w-screen-xl mx-auto px-4">
-    <link rel="canonical" href="{{ app.request.uri }}" />
     <nav class="flex mb-6" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         <li class="inline-flex items-center">

@@ -16,6 +16,12 @@
                 class="text-gray-900 hover:text-blue-700 px-3 py-2 text-sm font-medium dark:text-white dark:hover:text-blue-500">
                 Annonces <sup class="text-gradient italic text-xs">New</sup>
             </a>
+            {% if app.user %}
+            <a href="{{ path('app_favorites') }}"
+                class="text-gray-900 hover:text-blue-700 px-3 py-2 text-sm font-medium dark:text-white dark:hover:text-blue-500">
+                Mes favoris
+            </a>
+            {% endif %}
             <a href="/#pricing"
                 class="text-gray-900 hover:text-blue-700 px-3 py-2 text-sm font-medium dark:text-white dark:hover:text-blue-500">
                 Tarifs
@@ -77,6 +83,12 @@
                 class="text-gray-900 hover:text-blue-700 px-3 py-2 text-sm font-medium dark:text-white dark:hover:text-blue-500">
                 Mon compte
             </a>
+            {% if app.user %}
+            <a href="{{ path('app_favorites') }}"
+                class="text-gray-900 hover:text-blue-700 px-3 py-2 text-sm font-medium dark:text-white dark:hover:text-blue-500">
+                Mes favoris
+            </a>
+            {% endif %}
             <a href="{{ path('abonnement') }}"
                 class="text-gray-900 hover:text-blue-700 px-3 py-2 text-sm font-medium dark:text-white dark:hover:text-blue-500">
                 Abonnements <sup class="text-gradient italic text-xs">New</sup>
@@ -144,4 +156,4 @@
             });
         }
     });
-</script>   
+</script>
