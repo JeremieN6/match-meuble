@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\DemandeDeTravail;
 use App\Entity\OffreDeTravail;
+use App\Entity\Users;
 use App\Repository\DemandeDeTravailRepository;
 use App\Repository\OffreDeTravailRepository;
 use App\Repository\EvaluationRepository;
@@ -17,6 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @method Users|null getUser()
+ */
 class AnnoncesController extends AbstractController
 {
     #[Route('/annonces', name: 'app_annonces')]
@@ -206,7 +210,7 @@ class AnnoncesController extends AbstractController
             }
         }
         $uploadForm = null; $multiForm = null;
-        if ($this->getUser() && $offre->getUserId() && $offre->getUserId()->getId() === $this->getUser()->getId()) {
+        if ($this->getUser() && $offre->getUserId() && $offre->getUserId()->getId() === $this->requireUser()->getId()) {
             $img = new AnnonceImage();
             $img->setOffre($offre);
             $uploadForm = $this->createForm(AnnonceImageType::class, $img, [ 'action' => $this->generateUrl('app_offre_upload_image', ['id' => $offre->getId()]) ]);
@@ -272,7 +276,7 @@ class AnnoncesController extends AbstractController
             }
         }
         $uploadForm = null; $multiForm = null;
-        if ($this->getUser() && $demande->getUserId() && $demande->getUserId()->getId() === $this->getUser()->getId()) {
+        if ($this->getUser() && $demande->getUserId() && $demande->getUserId()->getId() === $this->requireUser()->getId()) {
             $img = new AnnonceImage();
             $img->setDemande($demande);
             $uploadForm = $this->createForm(AnnonceImageType::class, $img, [ 'action' => $this->generateUrl('app_demande_upload_image', ['id' => $demande->getId()]) ]);
@@ -293,7 +297,7 @@ class AnnoncesController extends AbstractController
     public function uploadOffreImage(OffreDeTravail $offre, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        if (!$offre->getUserId() || $offre->getUserId()->getId() !== $this->getUser()->getId()) { throw $this->createAccessDeniedException(); }
+    if (!$offre->getUserId() || $offre->getUserId()->getId() !== $this->requireUser()->getId()) { throw $this->createAccessDeniedException(); }
         $img = new AnnonceImage();
         $img->setOffre($offre);
         $form = $this->createForm(AnnonceImageType::class, $img);
@@ -309,7 +313,7 @@ class AnnoncesController extends AbstractController
     public function uploadDemandeImage(DemandeDeTravail $demande, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        if (!$demande->getUserId() || $demande->getUserId()->getId() !== $this->getUser()->getId()) { throw $this->createAccessDeniedException(); }
+    if (!$demande->getUserId() || $demande->getUserId()->getId() !== $this->requireUser()->getId()) { throw $this->createAccessDeniedException(); }
         $img = new AnnonceImage();
         $img->setDemande($demande);
         $form = $this->createForm(AnnonceImageType::class, $img);
@@ -325,7 +329,7 @@ class AnnoncesController extends AbstractController
     public function uploadOffreImages(OffreDeTravail $offre, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        if (!$offre->getUserId() || $offre->getUserId()->getId() !== $this->getUser()->getId()) { throw $this->createAccessDeniedException(); }
+    if (!$offre->getUserId() || $offre->getUserId()->getId() !== $this->requireUser()->getId()) { throw $this->createAccessDeniedException(); }
         $form = $this->createForm(AnnonceImagesType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -345,7 +349,7 @@ class AnnoncesController extends AbstractController
     public function uploadDemandeImages(DemandeDeTravail $demande, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        if (!$demande->getUserId() || $demande->getUserId()->getId() !== $this->getUser()->getId()) { throw $this->createAccessDeniedException(); }
+    if (!$demande->getUserId() || $demande->getUserId()->getId() !== $this->requireUser()->getId()) { throw $this->createAccessDeniedException(); }
         $form = $this->createForm(AnnonceImagesType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -366,7 +370,7 @@ class AnnoncesController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $ownerId = $image->getOffre()?->getUserId()?->getId() ?? $image->getDemande()?->getUserId()?->getId();
-        if ($ownerId !== $this->getUser()->getId()) { throw $this->createAccessDeniedException(); }
+    if ($ownerId !== $this->requireUser()->getId()) { throw $this->createAccessDeniedException(); }
         $submittedToken = $request->headers->get('X-CSRF-TOKEN');
         if (!$this->isCsrfTokenValid('del_img'.$image->getId(), $submittedToken)) {
             return $this->json(['error' => 'Invalid CSRF'], 400);
@@ -384,5 +388,17 @@ class AnnoncesController extends AbstractController
         $text = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
         $text = preg_replace('~[^-\w]+~', '', $text);
         return $text ?: 'annonce';
+    }
+
+    /**
+     * Garantit qu’un utilisateur authentifié de type App\Entity\Users est disponible.
+     */
+    private function requireUser(): Users
+    {
+        $user = $this->getUser();
+        if (!$user instanceof Users) {
+            throw $this->createAccessDeniedException('Utilisateur non authentifié.');
+        }
+        return $user;
     }
 }
