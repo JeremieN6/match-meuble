@@ -33,8 +33,10 @@ class AnnoncesController extends AbstractController
         $q = trim((string)$request->query->get('q', ''));
         $min = $request->query->has('min') ? (int)$request->query->get('min') : null;
         $max = $request->query->has('max') ? (int)$request->query->get('max') : null;
-        $status = $request->query->get('status');
-        $type = $request->query->get('type'); // 'offre' | 'demande' | null
+    $status = $request->query->get('status');
+    $type = $request->query->get('type'); // 'offre' | 'demande' | null
+    $city = trim((string)$request->query->get('city', ''));
+    $furniture = trim((string)$request->query->get('furniture', ''));
 
         // Simple query builders for perf (no full-text yet)
         $ob = $offres->createQueryBuilder('o')->orderBy('o.createdAt', 'DESC');
@@ -44,6 +46,14 @@ class AnnoncesController extends AbstractController
         if ($q !== '') {
             $ob->andWhere('LOWER(o.titre) LIKE :q OR LOWER(o.description) LIKE :q OR LOWER(o.localisation) LIKE :q')
                ->setParameter('q', '%'.mb_strtolower($q).'%');
+        }
+        if ($city !== '') {
+            $ob->andWhere('LOWER(o.localisation) LIKE :city')
+               ->setParameter('city', '%'.mb_strtolower($city).'%');
+        }
+        if ($furniture !== '') {
+            $ob->andWhere('LOWER(o.furnitureType) = :ft')
+               ->setParameter('ft', mb_strtolower($furniture));
         }
         $offreQ = $ob->getQuery();
         $paginatedOffres = null;
@@ -61,6 +71,14 @@ class AnnoncesController extends AbstractController
         if ($q !== '') {
             $db->andWhere('LOWER(d.titre) LIKE :qd OR LOWER(d.description) LIKE :qd OR LOWER(d.zoneAction) LIKE :qd')
                ->setParameter('qd', '%'.mb_strtolower($q).'%');
+        }
+        if ($city !== '') {
+            $db->andWhere('LOWER(d.zoneAction) LIKE :cityd')
+               ->setParameter('cityd', '%'.mb_strtolower($city).'%');
+        }
+        if ($furniture !== '') {
+            $db->andWhere('LOWER(d.furnitureType) = :ftd')
+               ->setParameter('ftd', mb_strtolower($furniture));
         }
         $demandeQ = $db->getQuery();
         $paginatedDemandes = null;
@@ -86,6 +104,7 @@ class AnnoncesController extends AbstractController
                 'href' => $this->generateUrl('app_annonces_offre_show', ['id' => $offre->getId(), 'slug' => $offre->getSlug() ?: $this->slugify($offre->getTitre() ?? 'offre')]),
                 'cta' => "Voir l'offre",
                 'localisation' => $offre->getLocalisation(),
+                'furniture' => $offre->getFurnitureType(),
                 'status' => $offre->getStatus() ? $offre->getStatus()->getNomStatus() : null,
                 'amount' => $offre->getRemuneration(),
                 'created' => $offre->getCreatedAt() ? $offre->getCreatedAt()->getTimestamp() : 0,
@@ -108,6 +127,7 @@ class AnnoncesController extends AbstractController
                 'href' => $this->generateUrl('app_annonces_demande_show', ['id' => $demande->getId(), 'slug' => $demande->getSlug() ?: $this->slugify($demande->getTitre() ?? 'demande')]),
                 'cta' => 'Voir la demande',
                 'localisation' => $demande->getZoneAction(),
+                'furniture' => $demande->getFurnitureType(),
                 'status' => null,
                 'amount' => $demande->getSalaire(),
                 'created' => $demande->getCreatedAt() ? $demande->getCreatedAt()->getTimestamp() : 0,
@@ -133,7 +153,7 @@ class AnnoncesController extends AbstractController
             'perPage' => $perPage,
             'hasMore' => $hasMore,
             'pagination' => $pagination,
-            'filters' => [ 'q' => $q, 'min' => $min, 'max' => $max, 'status' => $status, 'type' => $type ],
+            'filters' => [ 'q' => $q, 'min' => $min, 'max' => $max, 'status' => $status, 'type' => $type, 'city' => $city, 'furniture' => $furniture ],
         ]);
     }
 

@@ -30,6 +30,14 @@
           <option value="amount_asc">Budget croissant</option>
         </select>
         <input id="filter-q" value="{{ filters.q }}" type="search" placeholder="Rechercher..." class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
+        <input id="filter-city" value="{{ filters.city ?? '' }}" type="text" placeholder="Ville ou CP" class="w-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
+        <select id="filter-furniture" class="w-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+          <option value="">Tous meubles</option>
+          {% set opts = ['Armoire','Lit','Bureau','Table','Canapé','Cuisine','Autre'] %}
+          {% for o in opts %}
+            <option value="{{ o }}" {{ filters.furniture == o ? 'selected' : '' }}>{{ o }}</option>
+          {% endfor %}
+        </select>
         <input id="filter-min" value="{{ filters.min ?? '' }}" type="number" min="0" placeholder="Prix min" class="w-28 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
         <input id="filter-max" value="{{ filters.max ?? '' }}" type="number" min="0" placeholder="Prix max" class="w-28 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
         <button id="filter-reset" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Réinitialiser</button>
@@ -38,7 +46,7 @@
 
     <div id="cards-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {% for card in cards %}
-  <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 card-item" data-type="{{ card.type }}" data-title="{{ card.title|lower }}" data-desc="{{ card.description|lower }}" data-localisation="{{ (card.localisation ?? '')|lower }}" data-status="{{ (card.status ?? '')|lower }}" data-created="{{ card.created }}" data-amount="{{ card.amount ?? 0 }}">
+  <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 card-item" data-type="{{ card.type }}" data-title="{{ card.title|lower }}" data-desc="{{ card.description|lower }}" data-localisation="{{ (card.localisation ?? '')|lower }}" data-status="{{ (card.status ?? '')|lower }}" data-created="{{ card.created }}" data-amount="{{ card.amount ?? 0 }}" data-city="{{ (card.localisation ?? '')|lower }}" data-furniture="{{ (card.furniture ?? '')|lower }}">
         <a href="{{ card.href }}">
           <img class="rounded-t-lg w-full h-44 object-cover" src="{{ card.image }}" alt="" />
         </a>
@@ -77,6 +85,8 @@
   const typeSel = document.getElementById('filter-type');
   const statusSel = document.getElementById('filter-status');
   const qInput = document.getElementById('filter-q');
+  const cityInput = document.getElementById('filter-city');
+  const furnSel = document.getElementById('filter-furniture');
   const minInput = document.getElementById('filter-min');
   const maxInput = document.getElementById('filter-max');
       const sortSel = document.getElementById('sort-by');
@@ -88,7 +98,9 @@
         const status = statusSel.value.toLowerCase();
         const q = (qInput.value || '').trim().toLowerCase();
         const min = parseInt(minInput.value || '');
-        const max = parseInt(maxInput.value || '');
+  const max = parseInt(maxInput.value || '');
+  const city = (cityInput.value || '').trim().toLowerCase();
+  const furn = (furnSel.value || '').trim().toLowerCase();
 
         items.forEach(el => {
           const matchesType = type === 'all' || el.dataset.type === type;
@@ -98,7 +110,9 @@
           const amount = parseInt(el.dataset.amount || '0');
           const matchesMin = isNaN(min) || amount >= min;
           const matchesMax = isNaN(max) || amount <= max;
-          el.style.display = (matchesType && matchesStatus && matchesQuery && matchesMin && matchesMax) ? '' : 'none';
+          const matchesCity = city === '' || (el.dataset.city || '').includes(city);
+          const matchesFurn = furn === '' || (el.dataset.furniture || '') === furn;
+          el.style.display = (matchesType && matchesStatus && matchesQuery && matchesMin && matchesMax && matchesCity && matchesFurn) ? '' : 'none';
         });
 
         const visible = items.filter(el => el.style.display !== 'none');
@@ -118,7 +132,9 @@
       statusSel.addEventListener('change', applyFilters);
       qInput.addEventListener('input', applyFilters);
       minInput.addEventListener('input', applyFilters);
-      maxInput.addEventListener('input', applyFilters);
+  maxInput.addEventListener('input', applyFilters);
+  cityInput.addEventListener('input', applyFilters);
+  furnSel.addEventListener('change', applyFilters);
       sortSel.addEventListener('change', applyFilters);
       resetBtn.addEventListener('click', () => {
         typeSel.value = 'all';
@@ -126,7 +142,9 @@
         qInput.value = '';
         minInput.value = '';
         maxInput.value = '';
-        sortSel.value = 'date_desc';
+  sortSel.value = 'date_desc';
+  cityInput.value = '';
+  furnSel.value = '';
         applyFilters();
       });
 

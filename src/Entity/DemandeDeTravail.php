@@ -46,6 +46,9 @@ class DemandeDeTravail
     #[ORM\OneToMany(mappedBy: 'demande', targetEntity: AnnonceImage::class, orphanRemoval: false)]
     private Collection $images;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $furnitureType = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -166,4 +169,15 @@ class DemandeDeTravail
 
     /** @return Collection<int, AnnonceImage> */
     public function getImages(): Collection { return $this->images; }
+
+    public function getFurnitureType(): ?string
+    {
+        return $this->furnitureType;
+    }
+
+    public function setFurnitureType(?string $furnitureType): static
+    {
+        $this->furnitureType = $furnitureType;
+        return $this;
+    }
 }
