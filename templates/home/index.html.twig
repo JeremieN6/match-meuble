@@ -11,11 +11,11 @@
 	<!-- About Section -->
     {{ include('components/about.html.twig') }}
 
-	<!-- Pricing Section -->
-    {{ include('components/pricing.html.twig', { plans: plans|default(null) }) }}
-
 	<!-- Testimonials Section -->
     {{ include('components/testimonials.html.twig') }}
+
+	<!-- Pricing Section -->
+    {{ include('components/pricing.html.twig', { plans: plans|default(null) }) }}
 
 	<!-- Newsletter Section -->
     {{ include('components/newsletter.html.twig') }}
