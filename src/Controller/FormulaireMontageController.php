@@ -58,6 +58,8 @@ class FormulaireMontageController extends AbstractController
             $offerMontageEntity->setRemuneration($remuneration);
             $offerMontageEntity->setDateDebutMontage($dateDebutMontage);
             $offerMontageEntity->setDateFinMontage($dateFinMontage);
+            // slug
+            $offerMontageEntity->setSlug($this->slugify($titre));
 
              //envoie a l'entité
              $entityManager->persist($offerMontageEntity);
@@ -112,6 +114,8 @@ class FormulaireMontageController extends AbstractController
             $demandeMontageEntity->setZoneAction($zoneAction);
             $demandeMontageEntity->setSalaire($salaire);
             $demandeMontageEntity->setCreatedAt(new DateTimeImmutable());
+            // slug
+            $demandeMontageEntity->setSlug($this->slugify($titre));
 
             //envoie a l'entité
             $entityManager->persist($demandeMontageEntity);
@@ -129,5 +133,15 @@ class FormulaireMontageController extends AbstractController
             'demandeMontageForm' => $demandeMontageForm->createView(),
             'user' => $connectedUser,
         ]);
+    }
+
+    private function slugify(string $text): string
+    {
+        $text = strtolower(trim($text));
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        $text = trim($text, '-');
+        $text = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        return $text ?: 'annonce';
     }
 }

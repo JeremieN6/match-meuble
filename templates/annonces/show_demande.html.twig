@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}MatchMeuble | Demande - {{ demande.titre ?? 'Demande de montage' }}{% endblock %}
+{% block meta %}
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="{{ demande.titre ?? 'Demande de montage' }}" />
+  <meta property="og:description" content="{{ (demande.description|striptags)|u.truncate(150, '…') }}" />
+  <meta property="og:url" content="{{ app.request.uri }}" />
+  <meta property="og:image" content="https://images.pexels.com/photos/4247947/pexels-photo-4247947.jpeg?auto=compress&cs=tinysrgb&w=1200" />
+{% endblock %}
 
 {% block body %}
 <section class="bg-surface-50 dark:bg-gray-900 py-10 lg:py-14">
@@ -68,8 +75,8 @@
           </div>
 
           <div class="mt-6 flex flex-wrap gap-3">
-            <a href="#contact" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Contacter</a>
-            <button type="button" class="px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 dark:text-primary-300 dark:bg-primary-900/20 dark:border-primary-900">Enregistrer</button>
+            <button data-modal-target="contact-modal" data-modal-toggle="contact-modal" type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Contacter</button>
+            <button id="fav-demande-btn" type="button" data-url="{{ path('toggle_favorite_demande', {id: demande.id}) }}" data-csrf="{{ csrf_token('fav_demande' ~ demande.id) }}" class="px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 dark:text-primary-300 dark:bg-primary-900/20 dark:border-primary-900">Enregistrer</button>
             <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-700">Partager</button>
           </div>
         </div>
@@ -105,5 +112,77 @@
       </aside>
     </div>
   </div>
+
+  <!-- Contact Modal -->
+  <div id="contact-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="contact-modal">
+          <span class="sr-only">Close modal</span>
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+        </button>
+        <div class="p-6">
+          <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Contacter le demandeur</h3>
+          <form id="contact-demande-form" class="space-y-4" data-url="{{ path('send_message_demande', {id: demande.id}) }}" data-csrf="{{ csrf_token('msg_demande' ~ demande.id) }}">
+            <textarea name="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Bonjour, je peux vous aider..."></textarea>
+            <button type="submit" class="w-full inline-flex justify-center items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Envoyer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-screen-xl mx-auto px-4 mt-10">
+    {% if similars is defined and similars|length > 0 %}
+    <div class="mt-10">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Annonces similaires</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {% for s in similars %}
+        <a href="{{ s.href }}" class="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow p-4">
+          <img class="rounded w-full h-36 object-cover mb-3" src="{{ s.image }}" alt="">
+          <h3 class="font-semibold text-gray-900 dark:text-white">{{ s.title }}</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400">{{ s.description }}</p>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('fav-demande-btn');
+      if (btn) {
+        btn.addEventListener('click', async () => {
+          const url = btn.dataset.url;
+          const csrf = btn.dataset.csrf;
+          const res = await fetch(url, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf } });
+          const data = await res.json();
+          if (data.favori === true) {
+            btn.textContent = 'Enregistré';
+          } else if (data.favori === false) {
+            btn.textContent = 'Enregistrer';
+          }
+        });
+      }
+
+      const form = document.getElementById('contact-demande-form');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const message = form.querySelector('[name="message"]').value.trim();
+          if (!message) return;
+          const url = form.dataset.url;
+          const csrf = form.dataset.csrf;
+          const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf }, body: JSON.stringify({ message }) });
+          if (res.ok) {
+            form.reset();
+            const closeBtn = document.querySelector('[data-modal-hide="contact-modal"]');
+            if (closeBtn) closeBtn.click();
+          }
+        });
+      }
+    });
+  </script>
 </section>
 {% endblock %}
