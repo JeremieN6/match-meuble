@@ -12,3 +12,7 @@ services:
     image: schickling/mailcatcher
     ports: ["1025", "1080"]
 ###< symfony/mailer ###
+
+  mysql:
+    ports:
+      - "3306:3306"

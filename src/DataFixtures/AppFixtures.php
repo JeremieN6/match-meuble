@@ -29,6 +29,9 @@ class AppFixtures extends Fixture
             $offre->setRemuneration($faker->numberBetween(50, 400));
             $offre->setDateDebutMontage($faker->dateTimeBetween('now', '+10 days'));
             $offre->setDateFinMontage($faker->dateTimeBetween('+11 days', '+30 days'));
+            $offre->setFurnitureType($faker->randomElement([
+                'Armoire', 'Bibliothèque', 'Bureau', 'Commode', 'Dressing', 'Lit', 'Meuble TV', 'Étagères'
+            ]));
             $offre->setCreatedAt(new \DateTimeImmutable());
             $offre->setUpdatedAt(new \DateTimeImmutable());
             $manager->persist($offre);
@@ -48,6 +51,9 @@ class AppFixtures extends Fixture
             $demande->setDisponibilite($faker->randomElement(['Soirées', 'Week-ends', 'En journée']));
             $demande->setSalaire($faker->numberBetween(15, 40));
             $demande->setZoneAction($faker->randomElement(['5 km', '10 km', '15 km', '20 km']));
+            $demande->setFurnitureType($faker->randomElement([
+                'Armoire', 'Bibliothèque', 'Bureau', 'Commode', 'Dressing', 'Lit', 'Meuble TV', 'Étagères'
+            ]));
             $demande->setCreatedAt(new \DateTimeImmutable());
             $demande->setUpdatedAt(new \DateTimeImmutable());
             $manager->persist($demande);
