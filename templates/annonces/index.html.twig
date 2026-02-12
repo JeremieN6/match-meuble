@@ -11,36 +11,38 @@
         <p class="mt-2 text-gray-600 dark:text-gray-400">Parcourez toutes les offres et demandes de montage de meuble.</p>
       </div>
       <!-- Filtres -->
-      <div class="flex flex-wrap items-center gap-3">
-        <select id="filter-type" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+      <div class="w-full md:w-auto md:min-w-[760px] p-4 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+        <select id="filter-type" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
           <option value="all" {{ filters.type is empty or filters.type == 'all' ? 'selected' : '' }}>Tous les types</option>
           <option value="offre" {{ filters.type == 'offre' ? 'selected' : '' }}>Offres</option>
           <option value="demande" {{ filters.type == 'demande' ? 'selected' : '' }}>Demandes</option>
         </select>
-        <select id="filter-status" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+        <select id="filter-status" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
           <option value="all" {{ filters.status is empty ? 'selected' : '' }}>Tous statuts</option>
           <option value="Libre" {{ filters.status == 'Libre' ? 'selected' : '' }}>Libre</option>
           <option value="En cours" {{ filters.status == 'En cours' ? 'selected' : '' }}>En cours</option>
           <option value="Terminée" {{ filters.status == 'Terminée' ? 'selected' : '' }}>Terminée</option>
         </select>
-        <select id="sort-by" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+        <select id="sort-by" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
           <option value="date_desc">Plus récentes</option>
           <option value="date_asc">Plus anciennes</option>
           <option value="amount_desc">Budget décroissant</option>
           <option value="amount_asc">Budget croissant</option>
         </select>
-        <input id="filter-q" value="{{ filters.q }}" type="search" placeholder="Rechercher..." class="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
-        <input id="filter-city" value="{{ filters.city ?? '' }}" type="text" placeholder="Ville ou CP" class="w-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
-        <select id="filter-furniture" class="w-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+        <input id="filter-q" value="{{ filters.q }}" type="search" placeholder="Rechercher..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+        <input id="filter-city" value="{{ filters.city ?? '' }}" type="text" placeholder="Ville ou CP" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+        <select id="filter-furniture" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
           <option value="">Tous meubles</option>
           {% set opts = ['Armoire','Lit','Bureau','Table','Canapé','Cuisine','Autre'] %}
           {% for o in opts %}
             <option value="{{ o }}" {{ filters.furniture == o ? 'selected' : '' }}>{{ o }}</option>
           {% endfor %}
         </select>
-        <input id="filter-min" value="{{ filters.min ?? '' }}" type="number" min="0" placeholder="Prix min" class="w-28 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
-        <input id="filter-max" value="{{ filters.max ?? '' }}" type="number" min="0" placeholder="Prix max" class="w-28 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
-        <button id="filter-reset" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Réinitialiser</button>
+        <input id="filter-min" value="{{ filters.min ?? '' }}" type="number" min="0" placeholder="Prix min" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+        <input id="filter-max" value="{{ filters.max ?? '' }}" type="number" min="0" placeholder="Prix max" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+        <button id="filter-reset" class="w-full xl:w-auto inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700">Réinitialiser</button>
+        </div>
       </div>
     </div>
 
