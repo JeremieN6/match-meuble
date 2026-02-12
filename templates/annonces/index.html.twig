@@ -179,20 +179,78 @@
     });
   </script>
 {% endblock %}
-{% endblock %}
 
 {% if pagination %}
   <div class="max-w-screen-xl mx-auto px-4 pb-10">
-    {{ knp_pagination_render(pagination) }}
+    <nav aria-label="Page navigation example">
+      <ul class="flex -space-x-px text-sm">
+        <li>
+          {% if pagination.currentPageNumber > 1 %}
+            <a href="#" data-page="{{ pagination.currentPageNumber - 1 }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-10 focus:outline-none">Previous</a>
+          {% else %}
+            <span class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium font-medium rounded-s-base text-sm px-3 h-10 opacity-50 cursor-not-allowed">Previous</span>
+          {% endif %}
+        </li>
+        {# pages around current (±2) #}
+        {% set start = pagination.currentPageNumber - 2 %}
+        {% set end = pagination.currentPageNumber + 2 %}
+        {% if start < 1 %}{% set end = end + (1 - start) %}{% set start = 1 %}{% endif %}
+        {% if end > pagination.pageCount %}{% set start = start - (end - pagination.pageCount) %}{% set end = pagination.pageCount %}{% endif %}
+        {% if start < 1 %}{% set start = 1 %}{% endif %}
+        {% for p in start..end %}
+          <li>
+            {% if p == pagination.currentPageNumber %}
+              <a href="#" aria-current="page" data-page="{{ p }}" class="flex items-center justify-center text-fg-brand bg-neutral-tertiary-medium box-border border border-default-medium hover:text-fg-brand font-medium text-sm w-10 h-10 focus:outline-none">{{ p }}</a>
+            {% else %}
+              <a href="#" data-page="{{ p }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-10 h-10 focus:outline-none">{{ p }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li>
+          {% if pagination.currentPageNumber < pagination.pageCount %}
+            <a href="#" data-page="{{ pagination.currentPageNumber + 1 }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-10 focus:outline-none">Next</a>
+          {% else %}
+            <span class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium font-medium rounded-e-base text-sm px-3 h-10 opacity-50 cursor-not-allowed">Next</span>
+          {% endif %}
+        </li>
+      </ul>
+    </nav>
   </div>
 {% else %}
-  <div id="pagination-controls" class="max-w-screen-xl mx-auto px-4 pb-10 flex items-center justify-center gap-4">
-    {% if page > 1 %}
-      <a href="#" data-page="{{ page - 1 }}" class="px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-700">Précédent</a>
-    {% endif %}
-    <span class="text-sm text-gray-600 dark:text-gray-400">Page {{ page }}</span>
-    {% if hasMore %}
-      <a href="#" data-page="{{ page + 1 }}" class="px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-700">Suivant</a>
-    {% endif %}
+  <div class="max-w-screen-xl mx-auto px-4 pb-10">
+    <nav aria-label="Page navigation example">
+      <ul class="flex -space-x-px text-sm">
+        <li>
+          {% if page > 1 %}
+            <a href="#" data-page="{{ page - 1 }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-10 focus:outline-none">Previous</a>
+          {% else %}
+            <span class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium font-medium rounded-s-base text-sm px-3 h-10 opacity-50 cursor-not-allowed">Previous</span>
+          {% endif %}
+        </li>
+
+        {# window of 5 pages around current when total unknown #}
+        {% set start = page - 2 %}
+        {% if start < 1 %}{% set start = 1 %}{% endif %}
+        {% set end = start + 4 %}
+        {% for p in start..end %}
+          <li>
+            {% if p == page %}
+              <a href="#" aria-current="page" data-page="{{ p }}" class="flex items-center justify-center text-fg-brand bg-neutral-tertiary-medium box-border border border-default-medium hover:text-fg-brand font-medium text-sm w-10 h-10 focus:outline-none">{{ p }}</a>
+            {% else %}
+              <a href="#" data-page="{{ p }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-10 h-10 focus:outline-none">{{ p }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+
+        <li>
+          {% if hasMore %}
+            <a href="#" data-page="{{ page + 1 }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-10 focus:outline-none">Next</a>
+          {% else %}
+            <span class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium font-medium rounded-e-base text-sm px-3 h-10 opacity-50 cursor-not-allowed">Next</span>
+          {% endif %}
+        </li>
+      </ul>
+    </nav>
   </div>
 {% endif %}
+{% endblock %}
